@@ -129,7 +129,7 @@ module MyIRB
   def self.impl
     return @impl if @impl
     @impl = case RUBY_ENGINE
-            when "ruby"  then "Matz Ruby"
+            when "ruby"  then "MRI"
             when "jruby" then "JRuby"
             when "rbx"   then "Rubinius"
             else RUBY_ENGINE
@@ -150,7 +150,15 @@ module MyIRB
 
   # to be overwritten
   def self.rails_prompt
-    normal_prompt
+    pre = in_red(impl) + in_brown(" #{ENV['RAILS_ENV']}")
+    @normal_prompt ||= {
+      :AUTO_INDENT => true,
+      :PROMPT_I    => pre + in_lred(" >> "),
+      :PROMPT_S    => pre + in_lred(" %l> "),
+      :PROMPT_C    => pre + in_lred(" ?> "),
+      :PROMPT_N    => pre + in_lred(" ?> "),
+      :RETURN      => pre + in_lred(" => ") + "%s\n"
+    }
   end
 
   def self.prompt
@@ -220,9 +228,18 @@ if rubinius?
     alias orig_inspect inspect
     def inspect; in_lgreen orig_inspect; end
   end
+  [nil, false, true].each do |var|
+    class << var
+      alias orig_inspect inspect
+      def inspect; in_cyan orig_inspect; end
+    end
+  end
 else
   String.color_inspect  { |o| in_green o.nocolor_inspect  }
   Symbol.color_inspect  { |o| in_lgreen o.nocolor_inspect }
+  [NilClass, TrueClass, FalseClass].each do |a_class|
+    a_class.color_inspect { |o| in_cyan o.nocolor_inspect }
+  end
 end
 
 Array.color_inspect   { |o| o.pretty_inspect "[", "]"   }
@@ -230,17 +247,16 @@ Numeric.color_inspect { |o| in_purple o.nocolor_inspect }
 Range.color_inspect   { |o| o.min.inspect + in_lblue("..") + o.max.inspect }
 Tuple.color_inspect   { |o| o.pretty_inspect "<< ", " >>" } if defined? Tuple
 
-Hash.color_inspect do
-  pretty_inspect "{", "}" do |element|
+Hash.color_inspect do |o|
+  o.pretty_inspect "{", "}" do |element|
     element.collect { |e| e.inspect }.join in_lblue(" => ")
   end
 end
 
-
-Regexp.color_inspect do
+Regexp.color_inspect do |o|
   out = ""
   escaped = false
-  self.nocolor_inspect.each_char do |char|
+  o.nocolor_inspect.each_char do |char|
     if escaped
       escaped = false
       out << in_gray(char)
@@ -256,10 +272,6 @@ Regexp.color_inspect do
     end
   end
   out
-end
-
-[NilClass, TrueClass, FalseClass].each do |a_class|
-  a_class.color_inspect { in_cyan nocolor_inspect }
 end
 
 class << ENV
