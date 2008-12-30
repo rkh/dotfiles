@@ -69,7 +69,7 @@ module MyIRB
   def direct_output(a_string)
     a_string = a_string.dup
     class << a_string
-      color_inspect { to_s rescue nocolor_inspect }
+      alias inspect to_s
     end
     a_string
   end
@@ -98,24 +98,24 @@ module MyIRB
     @@color_inspect = false
   end
 
-  def color_inspect instance = nil, &block
+  def color_inspect &block
+    return if @color_inspect
     if self.is_a? Class
       @color_inspect = block
       self.class_eval do
         alias nocolor_inspect inspect
         def inspect
-          color_inspect = self.class.instance_variable_get("@color_inspect")
-          if color_inspect? and color_inspect
-            instance_eval(&color_inspect)
+          block = self.class.instance_variable_get("@color_inspect")
+          if color_inspect? and block
+            block.call(self)
           else
             nocolor_inspect
           end
         end
       end
     else
-      class << self
-        color_inspect(&block)
-      end
+      a_class = class << self; self; end
+      a_class.color_inspect(&block)
     end
   end
 
@@ -202,12 +202,12 @@ module Enumerable
   end
 end
 
-Array.color_inspect   { pretty_inspect "[", "]"   }
-String.color_inspect  { in_green nocolor_inspect  }
-Symbol.color_inspect  { in_lgreen nocolor_inspect }
-Numeric.color_inspect { in_purple nocolor_inspect }
-Range.color_inspect   { min.inspect + in_lblue("..") + max.inspect }
-Tuple.color_inspect   { pretty_inspect "<< ", " >>" } if defined? Tuple
+Array.color_inspect   { |o| o.pretty_inspect "[", "]"   }
+String.color_inspect  { |o| in_green o.nocolor_inspect  }
+Symbol.color_inspect  { |o| in_lgreen o.nocolor_inspect }
+Numeric.color_inspect { |o| in_purple o.nocolor_inspect }
+Range.color_inspect   { |o| o.min.inspect + in_lblue("..") + o.max.inspect }
+Tuple.color_inspect   { |o| o.pretty_inspect "<< ", " >>" } if defined? Tuple
 
 Hash.color_inspect do
   pretty_inspect "{", "}" do |element|
