@@ -12,7 +12,7 @@ module MyIRB
   %w[
   irb/completion irb/ext/save-history
   yaml English fileutils date open-uri pp
-  rubygems active_support map_by_method
+  rubygems map_by_method active_support
   ].each do |lib|
     begin
       require lib
@@ -23,21 +23,21 @@ module MyIRB
   include Rubinius if defined? Rubinius
   include FileUtils::Verbose
 
-  FG_COLORS = { :black      => "\033[0;30m", :gray      => "\033[1;30m",
-                :lgray      => "\033[0;37m", :white     => "\033[1;37m",
-                :red        => "\033[0;31m", :lred      => "\033[1;31m",
-                :green      => "\033[0;32m", :lgreen    => "\033[1;32m",
-                :brown      => "\033[0;33m", :yellow    => "\033[1;33m",
-                :blue       => "\033[0;34m", :lblue     => "\033[1;34m",
-                :purple     => "\033[0;35m", :lpurple   => "\033[1;35m",
-                :cyan       => "\033[0;36m", :lcyan     => "\033[1;36m"   }
-  BG_COLORS = { :black      => "\033[40m",   :red       => "\033[41m",
-                :green      => "\033[42m",   :yellow    => "\033[43m",
-                :blue       => "\033[44m",   :purple    => "\033[45m",
-                :cyan       => "\033[46m",   :gray      => "\033[47m"     }
-  ANSI_MISC = { :reset      => "\033[0m",    :bold      => "\033[1m",
-                :underscore => "\033[4m",    :blink     => "\033[5m",
-                :reverse    => "\033[7m",    :concealed => "\033[8m"      }
+  FG_COLORS = { :black      => "\\033[0;30m", :gray      => "\\033[1;30m",
+                :lgray      => "\\033[0;37m", :white     => "\\033[1;37m",
+                :red        => "\\033[0;31m", :lred      => "\\033[1;31m",
+                :green      => "\\033[0;32m", :lgreen    => "\\033[1;32m",
+                :brown      => "\\033[0;33m", :yellow    => "\\033[1;33m",
+                :blue       => "\\033[0;34m", :lblue     => "\\033[1;34m",
+                :purple     => "\\033[0;35m", :lpurple   => "\\033[1;35m",
+                :cyan       => "\\033[0;36m", :lcyan     => "\\033[1;36m"   }
+  BG_COLORS = { :black      => "\\033[40m",   :red       => "\\033[41m",
+                :green      => "\\033[42m",   :yellow    => "\\033[43m",
+                :blue       => "\\033[44m",   :purple    => "\\033[45m",
+                :cyan       => "\\033[46m",   :gray      => "\\033[47m"     }
+  ANSI_MISC = { :reset      => "\\033[0m",    :bold      => "\\033[1m",
+                :underscore => "\\033[4m",    :blink     => "\\033[5m",
+                :reverse    => "\\033[7m",    :concealed => "\\033[8m"      }
 
   def underlined *params
     return ANSI_MISC[:underscore] + params.join("\n") + ANSI_MISC[:reset]
@@ -98,7 +98,7 @@ module MyIRB
   end
 
   # to be overwritten
-  def self.rails_promt
+  def self.rails_prompt
     normal_prompt
   end
 
