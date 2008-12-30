@@ -1,7 +1,18 @@
+%w[
+irb/completion irb/ext/save-history
+yaml English fileutils date open-uri pp
+rubygems map_by_method active_support
+].each do |lib|
+  begin
+    require lib
+  rescue LoadError
+  end
+end
+
 module MyIRB
 
-  # cut down #inspect if size >= MAX_ELEMENTS
-  MAX_ELEMENTS = 15
+  include Rubinius if defined? Rubinius
+  include FileUtils::Verbose
 
   ::RUBY_ENGINE = "ruby" unless defined? ::RUBY_ENGINE
   unless RUBY_ENGINE.frozen?
@@ -9,35 +20,34 @@ module MyIRB
     RUBY_ENGINE.freeze
   end
 
-  %w[
-  irb/completion irb/ext/save-history
-  yaml English fileutils date open-uri pp
-  rubygems map_by_method active_support
-  ].each do |lib|
-    begin
-      require lib
-    rescue LoadError
+  ::RUBY_ENGINE_VERSION = const_get("#{RUBY_ENGINE.upcase}_VERSION")
+
+  # This should be changed in other setups / operation systems.
+  def ruby_binary
+    [ "/usr/bin/#{RUBY_ENGINE}#{RUBY_ENGINE_VERSION[/^\d+\.\d+/]}",
+      "/usr/bin/#{RUBY_ENGINE}#{RUBY_ENGINE_VERSION[/^\d+\.\d+/]}",
+      "/usr/bin/#{RUBY_ENGINE}"].detect do |bin|
+      File.exists? bin
     end
   end
 
-  include Rubinius if defined? Rubinius
-  include FileUtils::Verbose
+  @@color_inspect = false
 
-  FG_COLORS = { :black      => "\\033[0;30m", :gray      => "\\033[1;30m",
-                :lgray      => "\\033[0;37m", :white     => "\\033[1;37m",
-                :red        => "\\033[0;31m", :lred      => "\\033[1;31m",
-                :green      => "\\033[0;32m", :lgreen    => "\\033[1;32m",
-                :brown      => "\\033[0;33m", :yellow    => "\\033[1;33m",
-                :blue       => "\\033[0;34m", :lblue     => "\\033[1;34m",
-                :purple     => "\\033[0;35m", :lpurple   => "\\033[1;35m",
-                :cyan       => "\\033[0;36m", :lcyan     => "\\033[1;36m"   }
-  BG_COLORS = { :black      => "\\033[40m",   :red       => "\\033[41m",
-                :green      => "\\033[42m",   :yellow    => "\\033[43m",
-                :blue       => "\\033[44m",   :purple    => "\\033[45m",
-                :cyan       => "\\033[46m",   :gray      => "\\033[47m"     }
-  ANSI_MISC = { :reset      => "\\033[0m",    :bold      => "\\033[1m",
-                :underscore => "\\033[4m",    :blink     => "\\033[5m",
-                :reverse    => "\\033[7m",    :concealed => "\\033[8m"      }
+  FG_COLORS = { :black      => "\033[0;30m", :gray      => "\033[1;30m",
+                :lgray      => "\033[0;37m", :white     => "\033[1;37m",
+                :red        => "\033[0;31m", :lred      => "\033[1;31m",
+                :green      => "\033[0;32m", :lgreen    => "\033[1;32m",
+                :brown      => "\033[0;33m", :yellow    => "\033[1;33m",
+                :blue       => "\033[0;34m", :lblue     => "\033[1;34m",
+                :purple     => "\033[0;35m", :lpurple   => "\033[1;35m",
+                :cyan       => "\033[0;36m", :lcyan     => "\033[1;36m"   }
+  BG_COLORS = { :black      => "\033[40m",   :red       => "\033[41m",
+                :green      => "\033[42m",   :yellow    => "\033[43m",
+                :blue       => "\033[44m",   :purple    => "\033[45m",
+                :cyan       => "\033[46m",   :gray      => "\033[47m"     }
+  ANSI_MISC = { :reset      => "\033[0m",    :bold      => "\033[1m",
+                :underscore => "\033[4m",    :blink     => "\033[5m",
+                :reverse    => "\033[7m",    :concealed => "\033[8m"      }
 
   def underlined *params
     return ANSI_MISC[:underscore] + params.join("\n") + ANSI_MISC[:reset]
@@ -59,11 +69,12 @@ module MyIRB
   def direct_output(a_string)
     a_string = a_string.dup
     class << a_string
-      alias inspect to_s
-      alias color_inspect to_s
+      color_inspect { to_s rescue nocolor_inspect }
     end
     a_string
   end
+
+  module_function :direct_output
 
   def show_regexp(a, re)
     if (a =~ re)
@@ -75,6 +86,39 @@ module MyIRB
     end
   end
 
+  module_function :show_regexp
+
+  def color_inspect?
+    @@color_inspect
+  end
+
+  def in_color
+    @@color_inspect = true
+    yield
+    @@color_inspect = false
+  end
+
+  def color_inspect instance = nil, &block
+    if self.is_a? Class
+      @color_inspect = block
+      self.class_eval do
+        alias nocolor_inspect inspect
+        def inspect
+          color_inspect = self.class.instance_variable_get("@color_inspect")
+          if color_inspect? and color_inspect
+            instance_eval(&color_inspect)
+          else
+            nocolor_inspect
+          end
+        end
+      end
+    else
+      class << self
+        color_inspect(&block)
+      end
+    end
+  end
+
   def self.impl
     return @impl if @impl
     @impl = case RUBY_ENGINE
@@ -83,9 +127,9 @@ module MyIRB
             when "rbx"   then "Rubinius"
             else RUBY_ENGINE
             end
-    @impl << " " << Object.const_get("#{RUBY_ENGINE.upcase}_VERSION")
+    @impl << " " << RUBY_ENGINE_VERSION
   end
-
+  
   def self.normal_prompt
     @normal_prompt ||= {
       :AUTO_INDENT => true,
@@ -120,7 +164,6 @@ module MyIRB
   end
 
   def self.start_normal
-    Object.instance_eval { include MyIRB }
     IRB.conf[:PROMPT][:MY_PROMPT] = prompt
     IRB.conf.merge!(
       :PROMPT_MODE  => :MY_PROMPT,
@@ -140,124 +183,88 @@ module MyIRB
 
 end
 
-class Array
-  alias nocolor_inspect inspect
-  def inspect
-    if length >= MyIRB::MAX_ELEMENTS
-      in_lblue("[") +
-        first.inspect +
+include MyIRB
+
+module Enumerable
+  def pretty_inspect(open, close, &block)
+    block ||= proc { |e| e.inspect }
+     if length >= 15
+      in_lblue(open) +
+        block.call(first).to_s +
         in_lblue(", ") +
-        in_lgray("... #{length-2} elements ... ") +
-        in_lblue(", ") +
-        last.inspect +
-        in_lblue("]")
+        in_lgray("... #{length-1} elements") +
+        in_lblue(close)
     else
-      in_lblue("[") +
-        (collect { |e| e.inspect }).join(in_lblue(", ")) +
-        in_lblue("]")
+      in_lblue(open) +
+        collect(&block).join(in_lblue(", ")) +
+        in_lblue(close)
     end
   end
 end
 
-class Hash
-  alias nocolor_inspect inspect
-  def inspect
-    if length >= MyIRB::MAX_ELEMENTS
-      in_lblue("{") +
-        keys.first.inspect +
-        in_lblue(" => ") +
-        values.first.inspect +
-        in_lblue(", ... #{length-2} elements ..., ") +
-        keys.last.inspect +
-        in_lblue(" => ") +
-        values.last.inspect +
-        in_lblue("}")
+Array.color_inspect   { pretty_inspect "[", "]"   }
+String.color_inspect  { in_green nocolor_inspect  }
+Symbol.color_inspect  { in_lgreen nocolor_inspect }
+Numeric.color_inspect { in_purple nocolor_inspect }
+Range.color_inspect   { min.inspect + in_lblue("..") + max.inspect }
+Tuple.color_inspect   { pretty_inspect "<< ", " >>" } if defined? Tuple
+
+Hash.color_inspect do
+  pretty_inspect "{", "}" do |element|
+    element.collect { |e| e.inspect }.join in_lblue(" => ")
+  end
+end
+
+
+Regexp.color_inspect do
+  out = ""
+  escaped = false
+  self.nocolor_inspect.each_char do |char|
+    if escaped
+      escaped = false
+      out << in_gray(char)
+    elsif char == '\\'
+      escaped = true
+      out << in_gray(char)
+    elsif %w{* ? + [ ] ^ $ | .}.include? char
+      out << in_white(ANSI_MISC[:bold] + char)
+    elsif %w{/ ( )}.include? char
+      out << in_yellow(ANSI_MISC[:bold] + char)
     else
-      in_lblue("{") +
-        (collect do |assoc|
-          assoc.collect { |e| e.inspect }.join(in_lblue(" => "))
-        end).join(in_lblue(", ")) +
-        in_lblue("}")
+      out << in_gray(char)
     end
   end
+  out
 end
 
-class String
-  alias nocolor_inspect inspect
+[NilClass, TrueClass, FalseClass].each do |a_class|
+  a_class.color_inspect { in_cyan nocolor_inspect }
+end
+
+class << ENV
   def inspect
-    in_green nocolor_inspect
+    to_hash.inspect
   end
 end
 
-class Symbol
-  alias nocolor_inspect inspect
-  def inspect
-    in_lgreen nocolor_inspect
+class PrettyPrint
+  alias orig_text text
+  def text obj, *whatever
+    orig_text in_lblue(obj), *whatever
   end
 end
 
-class Numeric
-  alias nocolor_inspect inspect
-  def inspect
-    in_purple nocolor_inspect
+class << PP
+  alias orig_pp pp
+  def pp *args
+    in_color { orig_pp(*args) }
   end
 end
 
-class Range
-  alias nocolor_inspect inspect
-  def inspect
-    min.inspect + in_lblue("..") + max.inspect
-  end
-end
-
-if defined? Tuple
-  class Tuple
-    alias nocolor_inspect inspect
-    def inspect
-      in_lblue("<< ") +
-        (collect { |e| e.inspect }).join(in_lblue(", ")) +
-        in_lblue(" >>")
-    end
-  end
-end
-
-class Regexp
-  
-  alias nocolor_inspect inspect
-
-  def inspect
-    out = ""
-    escaped = false
-    self.nocolor_inspect.each_char do |char|
-      if escaped
-        escaped = false
-        out << in_gray(char)
-      elsif char == '\\'
-        escaped = true
-        out << in_gray(char)
-      elsif %w{* ? + [ ] ^ $ | .}.include? char
-        out << in_white(ANSI_MISC[:bold] + char)
-      elsif %w{/ ( )}.include? char
-        out << in_yellow(ANSI_MISC[:bold] + char)
-      else
-        out << in_gray(char)
-      end
-    end
-    out
-  end
-
-  def show_match(a)
-    show_regexp(a, self)
-  end
-
-end
-
-[nil, true, false].each do |obj|
-  class << obj
-    alias nocolor_inspect inspect
-    def inspect
-      in_cyan nocolor_inspect
-    end
+class IRB::Irb
+  alias orig_output_value output_value
+  def output_value
+    in_color { orig_output_value }
   end
 end
 
