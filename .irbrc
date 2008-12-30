@@ -1,7 +1,8 @@
 %w[
-irb/completion irb/ext/save-history
-yaml English fileutils date open-uri pp
-rubygems map_by_method active_support
+  irb/completion irb/ext/save-history
+  yaml English fileutils date open-uri pp
+  rubygems map_by_method what_methods
+  active_support
 ].each do |lib|
   begin
     require lib
@@ -30,6 +31,12 @@ module MyIRB
       File.exists? bin
     end
   end
+
+  def jruby?; RUBY_ENGINE == "jruby"; end
+  def mri?;   RUBY_ENGINE == "ruby";  end
+  def rbx?;   RUBY_ENGINE == "rbx";   end
+
+  alias rubinius? rbx?
 
   @@color_inspect = false
 
@@ -202,9 +209,23 @@ module Enumerable
   end
 end
 
+# For some reasons String.color_inspect makes "foo".inspect retrun
+# #<String:...> instead of "\"foo\"", same for Symbol.
+if rubinius?
+  class String
+    alias orig_inspect inspect
+    def inspect; in_green orig_inspect; end
+  end
+  class Symbol
+    alias orig_inspect inspect
+    def inspect; in_lgreen orig_inspect; end
+  end
+else
+  String.color_inspect  { |o| in_green o.nocolor_inspect  }
+  Symbol.color_inspect  { |o| in_lgreen o.nocolor_inspect }
+end
+
 Array.color_inspect   { |o| o.pretty_inspect "[", "]"   }
-String.color_inspect  { |o| in_green o.nocolor_inspect  }
-Symbol.color_inspect  { |o| in_lgreen o.nocolor_inspect }
 Numeric.color_inspect { |o| in_purple o.nocolor_inspect }
 Range.color_inspect   { |o| o.min.inspect + in_lblue("..") + o.max.inspect }
 Tuple.color_inspect   { |o| o.pretty_inspect "<< ", " >>" } if defined? Tuple
