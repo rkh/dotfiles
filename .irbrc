@@ -1,8 +1,7 @@
 %w[
   irb/completion irb/ext/save-history
-  yaml English fileutils date open-uri pp
-  rubygems map_by_method what_methods
-  active_support
+  yaml English fileutils date open-uri pp monitor
+  rubygems map_by_method what_methods active_support
 ].each do |lib|
   begin
     require lib
@@ -37,6 +36,10 @@ module MyIRB
   def rbx?;   RUBY_ENGINE == "rbx";   end
 
   alias rubinius? rbx?
+
+  %w[ls cat ping wget bash].each do |cmd|
+    define_method(cmd) { |*args| system "#{cmd} #{args.join ' '}" }
+  end
 
   @@color_inspect = false
 
@@ -100,9 +103,11 @@ module MyIRB
   end
 
   def in_color
-    @@color_inspect = true
-    yield
-    @@color_inspect = false
+    (@@color_monitor ||= Monitor.new).synchronize do
+      @@color_inspect = true
+      yield
+      @@color_inspect = false
+    end
   end
 
   def color_inspect &block
@@ -201,7 +206,7 @@ end
 include MyIRB
 
 module Enumerable
-  def pretty_inspect(open, close, &block)
+  def smart_inspect(open, close, &block)
     block ||= proc { |e| e.inspect }
      if length >= 15
       in_lblue(open) +
@@ -242,13 +247,13 @@ else
   end
 end
 
-Array.color_inspect   { |o| o.pretty_inspect "[", "]"   }
+Array.color_inspect   { |o| o.smart_inspect "[", "]"   }
 Numeric.color_inspect { |o| in_purple o.nocolor_inspect }
 Range.color_inspect   { |o| o.min.inspect + in_lblue("..") + o.max.inspect }
-Tuple.color_inspect   { |o| o.pretty_inspect "<< ", " >>" } if defined? Tuple
+Tuple.color_inspect   { |o| o.smart_inspect "<< ", " >>" } if defined? Tuple
 
 Hash.color_inspect do |o|
-  o.pretty_inspect "{", "}" do |element|
+  o.smart_inspect "{", "}" do |element|
     element.collect { |e| e.inspect }.join in_lblue(" => ")
   end
 end
