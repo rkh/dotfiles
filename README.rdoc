@@ -2,8 +2,6 @@ My dotfiles. You may reuse and redistribute this without any restrictions. No wa
 
 = .irbrc
 
-:include:irb.png
-
 My .irbrc only loads files from .config/irb
 It is optimized for usage with multiple ruby versions (I'm using it for 1.8, 1.9, Rubinius and JRuby).
 You probably can skip each scripts but myirb.rb and engine.rb.
