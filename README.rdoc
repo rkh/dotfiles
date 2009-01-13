@@ -1,18 +1,45 @@
-My dotfiles.
+My dotfiles. You may reuse and redistribute this without any restrictions. No warranty.
 
 = .irbrc
 
+:include:irb.png
+
 My .irbrc only loads files from .config/irb
 It is optimized for usage with multiple ruby versions (I'm using it for 1.8, 1.9, Rubinius and JRuby).
+You probably can skip each scripts but myirb.rb and engine.rb.
 Here is what the scripts do:
 
 == myirb.rb
-(relies on color.rb and engine.rb)
-
-Tries to load a couple of libraries (map_by_method and such) - but does not fail if unable to load them.
+Relies on color.rb. If you do not want colors, edit the prompt and do not load color.rb.
 Sets the prompt.
 
-If you do not want colors, edit the prompt and do not load color.rb.
+Tries to load a couple of libraries but does not fail if unable to load them. I used to load ActiveSupport but came to not like it anymore lately.
+
+<b>Most this is optional</b>, so if you installed it, but don't wanne use it simply remove it from the list.
+
+
+To use all of this features, do the following:
+
+  sudo gem install map_by_method what_methods rush english
+
+This are the libraries:
+* irb/completion: auto completion (tab tab)
+* irb/ext/save-history: readline history from former sessions
+* yaml
+* English
+* fileutils (it does "include FileUtil::Verbose")
+* date
+* open-uri
+* pp
+* monitor (I use this internally)
+* rubygems
+* map_by_method (http://drnicwilliams.com/category/ruby/gems/map_by_method/)
+* what_methods (http://redhanded.hobix.com/inspect/stickItInYourIrbrcMethodfinder.html)
+* rush (http://rush.heroku.com/)
+* english/array (Array#conjunction, like Array#to_sentence ActiveSupport)
+* english/inflect (String#plural and such)
+* english/string (String#word_wrap and such)
+* english/style (String#camelcase and such)
 
 == color.rb
 * Simple ANSI color methods (in_blue, underlined, ...)
