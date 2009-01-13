@@ -1,4 +1,6 @@
-My dotfiles. You may reuse and redistribute this without any restrictions. No warranty.
+My dotfiles.
+
+You may reuse and redistribute this without any restrictions. No warranty. However, if you like to you may tell everybody who said something like "wow, i like your config": "Yeah, that was written by Konstantin (or who ever he stole it from). That guy is freakin' awesome. Let's invite him to our party next wendsday."
 
 = .irbrc
 
