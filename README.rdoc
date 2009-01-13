@@ -2,18 +2,20 @@ My dotfiles. You may reuse and redistribute this without any restrictions. No wa
 
 = .irbrc
 
+See irb.png for a screenshot.
+
 My .irbrc only loads files from .config/irb
 It is optimized for usage with multiple ruby versions (I'm using it for 1.8, 1.9, Rubinius and JRuby).
 You probably can skip each scripts but myirb.rb and engine.rb.
 Here is what the scripts do:
 
 == myirb.rb
-Relies on color.rb. If you do not want colors, edit the prompt and do not load color.rb.
+Relies on color.rb. If you do not want colors, edit MyIRB.prompt and do not load color.rb.
 Sets the prompt.
 
-Tries to load a couple of libraries but does not fail if unable to load them. I used to load ActiveSupport but came to not like it anymore lately.
+Tries to load a couple of libraries but does not fail if unable to load them. I used to load ActiveSupport but happen to not like it anymore lately.
 
-<b>Most this is optional</b>, so if you installed it, but don't wanne use it simply remove it from the list.
+<b>Most of this is optional</b>, so if you installed it, but don't wanne use it, simply remove it from the list.
 
 
 To use all of this features, do the following:
@@ -34,7 +36,7 @@ This are the libraries:
 * map_by_method (http://drnicwilliams.com/category/ruby/gems/map_by_method/)
 * what_methods (http://redhanded.hobix.com/inspect/stickItInYourIrbrcMethodfinder.html)
 * rush (http://rush.heroku.com/)
-* english/array (Array#conjunction, like Array#to_sentence ActiveSupport)
+* english/array (Array#conjunction, like Array#to_sentence from ActiveSupport)
 * english/inflect (String#plural and such)
 * english/string (String#word_wrap and such)
 * english/style (String#camelcase and such)
@@ -53,9 +55,6 @@ This are the libraries:
     => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ... 11 elements]
     >> (0..20).to_a.show_all
     => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-* direct output for irb:
-    >> direct_ouput "i use this internaly"
-    => i use this internaly
 
 == engine.rb
 * Makes sure RUBY_ENGINE is defined, defines RUBY_ENGINE_VERSION
@@ -66,7 +65,7 @@ This are the libraries:
 * call external programms as ruby functions:
     ping "google.com"
     wget "http://github.com"
-* use external editor inside irb. can be extended to use any editor. try this:
+* use external editor inside irb. can be extended to use any editor (currently it understands vi, vim, gvim, evim, joe and kate). try this:
     vi
     last_edit
     vi :yaml
@@ -81,6 +80,6 @@ This are the libraries:
     File.write "foo.txt", "bar"
 
 == rails.rb
-* defines rails?
+* defines is_rails?
 * railsifies prompt
 * uses STDOUT for logging
