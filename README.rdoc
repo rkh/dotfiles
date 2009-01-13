@@ -27,7 +27,7 @@ This are the libraries:
 * irb/ext/save-history: readline history from former sessions
 * yaml
 * English
-* fileutils (it does "include FileUtil::Verbose")
+* fileutils (it does "include FileUtils::Verbose")
 * date
 * open-uri
 * pp
