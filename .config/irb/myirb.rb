@@ -1,15 +1,30 @@
-%w[
-  irb/completion irb/ext/save-history
-  yaml English fileutils date open-uri pp monitor
-  rubygems map_by_method what_methods active_support
-].each do |lib|
-  begin
-    require lib
-  rescue LoadError
-  end
-end
-
 module MyIRB
+
+  UNABLE_TO_LOAD = []
+
+  print "Loading Libraries: \033[1m["
+
+  %w[
+    irb/completion irb/ext/save-history
+    yaml English fileutils date open-uri pp monitor
+    rubygems map_by_method what_methods rush
+    english/array english/inflect english/string
+    english/style english/style_orm
+  ].each do |lib|
+    begin
+      require lib
+      print "\033[0;32m|"
+    rescue LoadError
+      UNABLE_TO_LOAD << lib
+      print "\033[0;31m|"
+    end
+  end
+
+  print "\033[0m\033[1m]\033[0m"
+  unless UNABLE_TO_LOAD.empty?
+    print "  Unable to load #{UNABLE_TO_LOAD.size} libraries. See UNABLE_TO_LOAD."
+  end
+  puts
 
   include FileUtils::Verbose
 

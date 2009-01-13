@@ -15,6 +15,7 @@ module MyIRB
     @@ruby_binary ||= [ "/usr/bin/#{RUBY_ENGINE}#{RUBY_ENGINE_VERSION}",
       "/usr/bin/#{RUBY_ENGINE}#{RUBY_ENGINE_VERSION[/^\d+\.\d+/]}",
       "/usr/bin/#{RUBY_ENGINE}" ].detect do |bin|
+      bin.freeze
       File.exists? bin
     end
   end

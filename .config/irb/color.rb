@@ -58,9 +58,15 @@ module MyIRB
   def in_color
     (@@color_monitor ||= Monitor.new).synchronize do
       @@color_inspect = true
-      yield
+      result = yield
       @@color_inspect = false
+      result
     end
+  end
+
+  def inspect_in color, output
+    return send("in_#{color}", output) if color_inspect?
+    output
   end
 
   def color_inspect &block
@@ -87,13 +93,44 @@ module MyIRB
 end
 
 module Enumerable
+
+  MAX_INSPECT  = 15
+  SHOW_INSPECT = 10
+
+  def short_inspect?
+    @short_inspect = true if @short_inspect == nil
+    @short_inspect
+  end
+
+  def show_all
+    old_value      = @short_inspect
+    @short_inspect = false
+    output = direct_output(in_color { inspect })
+    @short_inspect = old_value
+    output
+  end
+
+  def show_all!
+    @short_inspect = false
+    self
+  end
+
+  def short_inspect!
+    @short_inspect = true
+    self
+  end
+
   def smart_inspect(open, close, &block)
     block ||= proc { |e| e.inspect }
-     if length >= 15
+    if short_inspect? and length > MAX_INSPECT
+      first_elements = ""
+      each_with_index do |e, i|
+        break unless i < SHOW_INSPECT
+        first_elements << block.call(e) << in_lblue(", ")
+      end
       in_lblue(open) +
-        block.call(first).to_s +
-        in_lblue(", ") +
-        in_lgray("... #{length-1} elements") +
+        first_elements +
+        in_lgray("... #{length - SHOW_INSPECT} elements") +
         in_lblue(close)
     else
       in_lblue(open) +
@@ -101,6 +138,7 @@ module Enumerable
         in_lblue(close)
     end
   end
+  
 end
 
 # For some reasons String.color_inspect makes "foo".inspect retrun
@@ -108,28 +146,46 @@ end
 if rubinius?
   class String
     alias orig_inspect inspect
-    def inspect; in_green orig_inspect; end
+    def inspect
+      inspect_in :green, orig_inspect
+    end
   end
   class Symbol
     alias orig_inspect inspect
-    def inspect; in_lgreen orig_inspect; end
+    def inspect
+      inspect_in :lgreen, orig_inspect
+    end
   end
   [nil, false, true].each do |var|
     class << var
       alias orig_inspect inspect
-      def inspect; in_cyan orig_inspect; end
+      def inspect
+        inspect_in :cyan, orig_inspect
+      end
     end
+  end
+  %w[Fixnum Bignum Float].each do |c|
+    eval %[
+      class #{c}
+        alias orig_inspect inspect
+        def inspect
+          inspect_in :purple, orig_inspect
+        end
+      end
+    ]
   end
 else
   String.color_inspect  { |o| in_green o.nocolor_inspect  }
   Symbol.color_inspect  { |o| in_lgreen o.nocolor_inspect }
+  Fixnum.color_inspect  { |o| in_purple o.nocolor_inspect }
+  Bignum.color_inspect  { |o| in_purple o.nocolor_inspect }
+  Float.color_inspect   { |o| in_purple o.nocolor_inspect }
   [NilClass, TrueClass, FalseClass].each do |a_class|
     a_class.color_inspect { |o| in_cyan o.nocolor_inspect }
   end
 end
 
-Array.color_inspect   { |o| o.smart_inspect "[", "]"   }
-Numeric.color_inspect { |o| in_purple o.nocolor_inspect }
+Array.color_inspect   { |o| o.smart_inspect "[", "]" }
 Range.color_inspect   { |o| o.min.inspect + in_lblue("..") + o.max.inspect }
 Tuple.color_inspect   { |o| o.smart_inspect "<< ", " >>" } if defined? Tuple
 
