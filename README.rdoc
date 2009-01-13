@@ -1,0 +1,61 @@
+My dotfiles.
+
+= .irbrc
+
+My .irbrc only loads files from .config/irb
+It is optimized for usage with multiple ruby versions (I'm using it for 1.8, 1.9, Rubinius and JRuby).
+Here is what the scripts do:
+
+== myirb.rb
+(relies on color.rb and engine.rb)
+
+Tries to load a couple of libraries (map_by_method and such) - but does not fail if unable to load them.
+Sets the prompt.
+
+If you do not want colors, edit the prompt and do not load color.rb.
+
+== color.rb
+* Simple ANSI color methods (in_blue, underlined, ...)
+* Syntax highlighting in inspect and irb output:
+    an_object.inspect               # <- not highlighted
+    in_color { an_object.inspect }  # <- highlighted
+    >> an_object
+    => ... highlighted version of an_object ...
+* cool regex highlighting:
+    show_regexp("hello", /l+/)
+* shorten long Enumerable#inspect:
+    >> (0..20).to_a
+    => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ... 11 elements]
+    >> (0..20).to_a.show_all
+    => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+* direct output for irb:
+    >> direct_ouput "i use this internaly"
+    => i use this internaly
+
+== engine.rb
+* Makes sure RUBY_ENGINE is defined, defines RUBY_ENGINE_VERSION
+* Gives you rubinius?, mri? and jruby?.
+* Defines ruby_binary (you might want to change this on windows setups)
+
+== commands.rb
+* call external programms as ruby functions:
+    ping "google.com"
+    wget "http://github.com"
+* use external editor inside irb. can be extended to use any editor. try this:
+    vi
+    last_edit
+    vi :yaml
+    last_edit
+    name_edit :foo
+    vi ["i wonder what...", "... will happen?", { "foo" => "bar" }]
+    name_edit :bar
+    last_edit :foo
+    last_edit :bar
+    last_edit :foo
+* File.write (like File.read):
+    File.write "foo.txt", "bar"
+
+== rails.rb
+* defines rails?
+* railsifies prompt
+* uses STDOUT for logging
