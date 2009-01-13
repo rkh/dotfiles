@@ -64,8 +64,9 @@ This are the libraries:
 == commands.rb
 * call external programms as ruby functions:
     ping "google.com"
-    wget "http://github.com"
-* use external editor inside irb. can be extended to use any editor (currently it understands vi, vim, gvim, evim, joe and kate). try this:
+    wget :r, "http://github.com"
+    gem_install "ruby2ruby"
+* use external editor inside irb. can be extended to use any editor (currently it understands vi, vim, evim, ex, gvim, joe, kate and nano). try this:
     vi
     last_edit
     vi :yaml
