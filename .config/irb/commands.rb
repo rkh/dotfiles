@@ -49,10 +49,10 @@ module MyIRB
     case format
     when :yaml then object.to_yaml
     when :rb
-      if object.is_a? Module
-        Ruby2Ruby.translate object
-      else
-        object.to_s
+      case object
+      when Module then Ruby2Ruby.translate object
+      when Method then Ruby2Ruby.translate object.owner, object.name
+      else object.to_s
       end
     end
   end
@@ -67,10 +67,10 @@ module MyIRB
   end
 
   def editor_format_for a_value
-    if a_value and not defined? Ruby2Ruby or not a_value.is_a? Module
-      :yaml
-    else
+    if not a_value or (defined? Ruby2Ruby and a_value.is_a? Module or a_value.is_a? Method)
       :rb
+    else
+      :yaml
     end
   end
 
