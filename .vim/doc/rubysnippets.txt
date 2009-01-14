@@ -1,0 +1,157 @@
+*rubysnippets.txt*	Ruby snippets to accelerate code writing
+
+For instructions on installing this file, type
+	:help add-local-help
+inside Vim.
+
+Author: Eustáquio 'TaQ' Rangel
+
+===================================================================================
+
+The goal of this script is accelerate code writing with the Ruby 
+language. It uses some insert mode abbreviations to insert some structures
+and keywords, trying to keeping some consistency with the Ruby standards,
+like one liners presuming you're using some method that can filter or check 
+a collection with one line of code. Of course the standards are about keeping 
+one line of code inside { and }, not the fact that all the filter or checking
+methods take just one line. ;-)
+
+1. Installation                             *rubysnippets-install*
+
+Just put the rubysnippets.vim file inside your $HOME/.vim/scripts directory and
+source it while reading some file that can contain Ruby code, inserting something
+like this on your $HOME/.vimrc file:
+
+autocmd BufNewFile,BufRead *.rb,*.rhtml source ~/.vim/scripts/rubysnippets.vim
+
+2. Features
+
+2.1 - Defining methods                      *rubysnippets-methods*
+
+Typing def you'll get:
+
+def method_name
+end
+
+and the cursor will be positioned on "method_name" on Normal Mode, when you can
+use "cw" to replace the string with the method name you want.
+
+2.2 - Exceptions                            *rubysnippets-exceptions*
+
+Typing begin you'll get:
+
+begin
+rescue Exception => e
+end
+
+2.3 - Inject                                *rubysnippets-inject*
+
+Typing inject (of course after some object) you'll get:
+
+object.inject do |memo,obj|
+end
+
+2.4 - Each                                  *rubysnippets-each*
+
+Typing each (of course after some object) you'll get:
+
+object.each do |item|
+end
+
+2.5 - Classes and modules                   *rubysnippets-classes* *rubysnippets-modules*
+
+There's similar behaviours for classes and modules, when typing class or module:
+
+class ClassName
+end
+
+module ModuleName
+end
+
+2.6 - Attribute accessors                   *rubysnippets-attributes*
+
+Typing	Result
+------	------
+atr		attr_reader
+atw		attr_writer
+atc		attr_accessor
+
+2.7 - For block                             *rubysnippets-for*
+
+Here we have a snippet to work with for.
+It works on empty lines, or lines with one or two strings, 
+where it insert a default 'for' structure and change its 
+strings checking how many strings are on the current line.
+It works like this:
+
+current line		result
+------------		------
+<empty>			for item in collection
+ 					end
+@people			for item in @people
+ 					end
+person @people	for person in @people
+ 					end												
+
+It works on Insert Mode when you type 'for' as the first string on
+the line, and <C-F> on Insert and Normal Modes.
+
+2.8 - Hashes                                *rubysnippets-hash*
+
+Here we have a function to get the contents of the line,
+using <C-H> on both Normal and Insert modes, tokenize it 
+using spaces, and if the result is a even number collection, 
+create a hash. Like this:
+
+{1 :one 2 :two 3 :three 4 :four}
+
+will become
+
+{1=>:one,2=>:two,3=>:three,4=>:four}
+
+The { and } are mandatory, they identify a hash needing to be formatted.
+Please note that It will find the FIRST match between { and } and insert 
+the "=>" chars for key and values and commas as separators of the pairs.
+
+2.9 - Signs
+
+You can define signs (visual marks on the file) using "is" (Insert Sign)
+and remove the sign on the current line with "rs", both on Normal Mode.
+If using vim on a console, text-based mode, a ">>" string will be used
+for the signs. If using GUI, a small ruby icon will be used. The icon
+file is searched on the "pixmaps" directory under the default vim
+configuration directory.
+
+2.10 - Online documentation
+
+You can search for the word below the cursor using, on Normal Mode,
+"rd". The default URL will point to the Ruby documentation on Rollyo,
+maintained by James Britt.
+
+3. Configuration                            *rubysnippets-configuration*
+
+For some structures like def, class and module, automatic names are 
+inserted and the cursor is positioned over them. If you don't like
+this behaviour, you can define a variable to skip this operation,
+like this:
+
+let g:rubysnippets_skip_names=1
+
+You can put this command in your $HOME/.vimrc file. If the variable
+is defined, the Insert Mode is kept and you can continue to type your
+code normally, inserting the method, class or module name.
+
+For online documentation searching, you'll need to define what browser
+you'd like to use, on the g:rubysnippets_browser variable. Some samples
+values (GNU/Linux based):
+
+firefox -new-window
+firefox -new-tab
+xterm -bg black -fg white -e lynx
+
+You can set this variable on your .vimrc file like this:
+
+let g:rubysnippets_browser = "firefox -new-window"
+
+If you'd like to search elsewhere, declare the g:rubysnippets_search_url
+to the URL you want. The searched word will be appended on the end.
