@@ -22,7 +22,7 @@ module MyIRB
   @@editor       = "vi"
   @@editor_stack = []
 
-  def editor(format = nil, default = nil, editor = nil)
+  def editor(format = nil, default = nil, editor = nil, do_format = true)
     raise RuntimeError, "Does not work with JRuby" if jruby?
     @@editor_mutex.synchronize do
       default, format = format, default unless default or format.is_a? Symbol
@@ -34,10 +34,10 @@ module MyIRB
         i   += 1
         file = "/tmp/vi_irb_#{i}.#{format}"
       end
-      File.write file, editor_preload(format, default)
+      File.write(file, do_format ? editor_preload(format, default) : default)
       system "#{editor} #{file}"
       if File.exists? file
-        @@editor_stack << [format, File.read(file), editor]
+        @@editor_stack << [format, File.read(file), editor, false]
         result = editor_eval
         FileUtils.rm file
         result
@@ -97,7 +97,7 @@ module MyIRB
     end
   end
 
-  method_pattern /^gem_.*$/ do |name, *args|
+  method_pattern(/^gem_.*$/) do |name, *args|
     sh(gem_command, name.to_s[/[^_]*$/], *args)
   end
 
