@@ -6,6 +6,8 @@ However, if you like to you may tell everybody who said something like
 he stole it from). That guy is freakin' awesome. Let's invite him to our party
 next wednesday."
 
+Just clone and do "rake install" (or "rake install:irb").
+
 = .irbrc
 
 See irb.png for a screenshot.
