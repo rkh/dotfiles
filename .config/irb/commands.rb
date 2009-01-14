@@ -7,13 +7,13 @@ module MyIRB
   def sh *args
     system(
       args.inject("") do |cmd, arg|
-	cmd << " " if cmd.length > 0
-	str = arg.to_s
-	if arg.is_a? Symbol
-	  cmd << "-" if str.length > 1
-	  cmd << "-"
-	end
-	cmd << str
+        cmd << " " if cmd.length > 0
+        str = arg.to_s
+        if arg.is_a? Symbol
+          cmd << "-" if str.length > 1
+          cmd << "-"
+        end
+        cmd << str
       end
     )
   end
