@@ -5,6 +5,7 @@ However, if you like to you may tell everybody who said something like
 "wow, i like your config": "Yeah, that was written by Konstantin (or who ever
 he stole it from). That guy is freakin' awesome. Let's invite him to our party
 next wednesday."
+
 = .irbrc
 
 See irb.png for a screenshot.
@@ -14,7 +15,7 @@ It is optimized for usage with multiple ruby versions (I'm using it for 1.8, 1.9
 You probably can skip each scripts but myirb.rb and engine.rb.
 Here is what the scripts do:
 
-== myirb.rb
+== .config/irb/myirb.rb
 Relies on color.rb. If you do not want colors, edit MyIRB.prompt and do not load color.rb.
 Sets the prompt.
 
@@ -46,7 +47,7 @@ This are the libraries:
 * english/string (String#word_wrap and such)
 * english/style (String#camelcase and such)
 
-== color.rb
+== .config/irb/color.rb
 * Simple ANSI color methods (in_blue, underlined, ...)
 * Syntax highlighting in inspect and irb output:
     an_object.inspect               # <- not highlighted
@@ -61,12 +62,12 @@ This are the libraries:
     >> (0..20).to_a.show_all
     => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-== engine.rb
+== .config/irb/engine.rb
 * Makes sure RUBY_ENGINE is defined, defines RUBY_ENGINE_VERSION
 * Gives you rubinius?, mri? and jruby?.
 * Defines ruby_binary (you might want to change this on windows setups)
 
-== commands.rb
+== .config/irb/commands.rb
 * call external programms as ruby functions:
     ping "google.com"
     wget :r, "http://github.com"
@@ -85,7 +86,7 @@ This are the libraries:
 * File.write (like File.read):
     File.write "foo.txt", "bar"
 
-== rails.rb
+== .config/irb/rails.rb
 * defines is_rails?
 * railsifies prompt
 * uses STDOUT for logging
