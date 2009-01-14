@@ -25,6 +25,8 @@ module MyIRB
     ENV.include? 'RAILS_ENV'
   end
 
+  alias rails? is_rails?
+
   module_function :is_rails?
 
   def self.rails_prompt

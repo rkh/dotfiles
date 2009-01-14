@@ -1,20 +1,55 @@
 My dotfiles.
 
+You may reuse and redistribute this without any restrictions. No warranty.
+However, if you like to you may tell everybody who said something like
+"wow, i like your config": "Yeah, that was written by Konstantin (or who ever
+he stole it from). That guy is freakin' awesome. Let's invite him to our party
+next wednesday."
+
+Just clone and do "rake install" (or "rake install:irb").
+
 = .irbrc
+
+See irb.png for a screenshot.
 
 My .irbrc only loads files from .config/irb
 It is optimized for usage with multiple ruby versions (I'm using it for 1.8, 1.9, Rubinius and JRuby).
+You probably can skip each scripts but myirb.rb and engine.rb.
 Here is what the scripts do:
 
-== myirb.rb
-(relies on color.rb and engine.rb)
-
-Tries to load a couple of libraries (map_by_method and such) - but does not fail if unable to load them.
+== .config/irb/myirb.rb
+Relies on color.rb. If you do not want colors, edit MyIRB.prompt and do not load color.rb.
 Sets the prompt.
 
-If you do not want colors, edit the prompt and do not load color.rb.
+Tries to load a couple of libraries but does not fail if unable to load them. I used to load ActiveSupport but happen to not like it anymore lately.
 
-== color.rb
+<b>Most of this is optional</b>, so if you installed it, but don't wanne use it, simply remove it from the list.
+
+
+To use all of this features, do the following:
+
+  sudo gem install map_by_method what_methods rush english
+
+This are the libraries:
+* irb/completion: auto completion (tab tab)
+* irb/ext/save-history: readline history from former sessions
+* yaml
+* English
+* fileutils (it does "include FileUtils::Verbose")
+* date
+* open-uri
+* pp
+* monitor (I use this internally)
+* rubygems
+* map_by_method (http://drnicwilliams.com/category/ruby/gems/map_by_method/)
+* what_methods (http://redhanded.hobix.com/inspect/stickItInYourIrbrcMethodfinder.html)
+* rush (http://rush.heroku.com/)
+* english/array (Array#conjunction, like Array#to_sentence from ActiveSupport)
+* english/inflect (String#plural and such)
+* english/string (String#word_wrap and such)
+* english/style (String#camelcase and such)
+
+== .config/irb/color.rb
 * Simple ANSI color methods (in_blue, underlined, ...)
 * Syntax highlighting in inspect and irb output:
     an_object.inspect               # <- not highlighted
@@ -28,20 +63,18 @@ If you do not want colors, edit the prompt and do not load color.rb.
     => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ... 11 elements]
     >> (0..20).to_a.show_all
     => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-* direct output for irb:
-    >> direct_ouput "i use this internaly"
-    => i use this internaly
 
-== engine.rb
+== .config/irb/engine.rb
 * Makes sure RUBY_ENGINE is defined, defines RUBY_ENGINE_VERSION
 * Gives you rubinius?, mri? and jruby?.
 * Defines ruby_binary (you might want to change this on windows setups)
 
-== commands.rb
+== .config/irb/commands.rb
 * call external programms as ruby functions:
     ping "google.com"
-    wget "http://github.com"
-* use external editor inside irb. can be extended to use any editor. try this:
+    wget :r, "http://github.com"
+    gem_install "ruby2ruby"
+* use external editor inside irb. can be extended to use any editor (currently it understands vi, vim, evim, ex, gvim, joe, kate and nano). try this:
     vi
     last_edit
     vi :yaml
@@ -55,7 +88,7 @@ If you do not want colors, edit the prompt and do not load color.rb.
 * File.write (like File.read):
     File.write "foo.txt", "bar"
 
-== rails.rb
-* defines rails?
+== .config/irb/rails.rb
+* defines is_rails?
 * railsifies prompt
 * uses STDOUT for logging
