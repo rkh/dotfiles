@@ -46,7 +46,15 @@ module MyIRB
   end
 
   def editor_preload format, object
-    format == :yaml ? object.to_yaml : object
+    case format
+    when :yaml then object.to_yaml
+    when :rb
+      if object.is_a? Module
+        Ruby2Ruby.translate object
+      else
+        object.to_s
+      end
+    end
   end
 
   def editor_eval
@@ -59,8 +67,11 @@ module MyIRB
   end
 
   def editor_format_for a_value
-    return :rb unless a_value
-    :yaml
+    if a_value and not defined? Ruby2Ruby or not a_value.is_a? Module
+      :yaml
+    else
+      :rb
+    end
   end
 
   def last_edit name = nil

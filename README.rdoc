@@ -48,6 +48,7 @@ This are the libraries:
 * english/inflect (String#plural and such)
 * english/string (String#word_wrap and such)
 * english/style (String#camelcase and such)
+* ruby2ruby
 
 == .config/irb/color.rb
 * Simple ANSI color methods (in_blue, underlined, ...)
@@ -85,6 +86,7 @@ This are the libraries:
     last_edit :foo
     last_edit :bar
     last_edit :foo
+    vi MyIRB # (only if you have ruby2ruby installed)
 * File.write (like File.read):
     File.write "foo.txt", "bar"
 

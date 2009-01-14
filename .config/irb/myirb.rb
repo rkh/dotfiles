@@ -9,7 +9,7 @@ module MyIRB
     yaml English fileutils date open-uri pp monitor
     rubygems map_by_method what_methods rush
     english/array english/inflect english/string
-    english/style english/style_orm
+    english/style english/style_orm ruby2ruby
   ].each do |lib|
     begin
       require lib
