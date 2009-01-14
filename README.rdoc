@@ -86,7 +86,10 @@ This are the libraries:
     last_edit :foo
     last_edit :bar
     last_edit :foo
-    vi MyIRB # (only if you have ruby2ruby installed)
+    # (only if you have ruby2ruby installed):
+    vi MyIRB
+    def foo; :bar; end
+    vi method(:foo)
 * File.write (like File.read):
     File.write "foo.txt", "bar"
 
