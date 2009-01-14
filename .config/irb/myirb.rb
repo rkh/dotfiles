@@ -64,7 +64,6 @@ module MyIRB
   end
 
   def method_missing n, *p, &b
-    puts "jo"
     @@method_patterns ||= {}
     pattern = @@method_patterns.keys.detect { |r| n.to_s =~ r }
     return @@method_patterns[pattern].call(n, *p, &b) if pattern
