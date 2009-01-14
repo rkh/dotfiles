@@ -28,7 +28,7 @@ Tries to load a couple of libraries but does not fail if unable to load them. I 
 
 To use all of this features, do the following:
 
-  sudo gem install map_by_method what_methods rush english
+  sudo gem install map_by_method what_methods rush english ruby2ruby
 
 This are the libraries:
 * irb/completion: auto completion (tab tab)
