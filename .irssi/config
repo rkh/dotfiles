@@ -60,7 +60,7 @@ chatnets = {
   Ubuntu = { type = "IRC"; };
   Freenode = {
     type = "IRC";
-    autosendcmd = "/^msg NickServ identify hcn56k";
+    autosendcmd = "/^msg NickServ identify mysupersecretpassword";
   };
 };
 
