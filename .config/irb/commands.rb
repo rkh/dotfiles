@@ -48,12 +48,7 @@ module MyIRB
   def editor_preload format, object
     case format
     when :yaml then object.to_yaml
-    when :rb
-      case object
-      when Module then Ruby2Ruby.translate object
-      when Method then Ruby2Ruby.translate object.owner, object.name
-      else object.to_s
-      end
+    when :rb   then get_source object
     end
   end
 
