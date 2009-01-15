@@ -9,7 +9,7 @@ module MyIRB
     yaml English fileutils date open-uri pp monitor
     rubygems map_by_method what_methods rush
     english/array english/inflect english/string
-    english/style english/style_orm
+    english/style english/style_orm ruby2ruby
   ].each do |lib|
     begin
       require lib
@@ -64,7 +64,6 @@ module MyIRB
   end
 
   def method_missing n, *p, &b
-    puts "jo"
     @@method_patterns ||= {}
     pattern = @@method_patterns.keys.detect { |r| n.to_s =~ r }
     return @@method_patterns[pattern].call(n, *p, &b) if pattern

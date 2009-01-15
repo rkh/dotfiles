@@ -7,13 +7,13 @@ module MyIRB
   def sh *args
     system(
       args.inject("") do |cmd, arg|
-	cmd << " " if cmd.length > 0
-	str = arg.to_s
-	if arg.is_a? Symbol
-	  cmd << "-" if str.length > 1
-	  cmd << "-"
-	end
-	cmd << str
+        cmd << " " if cmd.length > 0
+        str = arg.to_s
+        if arg.is_a? Symbol
+          cmd << "-" if str.length > 1
+          cmd << "-"
+        end
+        cmd << str
       end
     )
   end
@@ -46,7 +46,15 @@ module MyIRB
   end
 
   def editor_preload format, object
-    format == :yaml ? object.to_yaml : object
+    case format
+    when :yaml then object.to_yaml
+    when :rb
+      case object
+      when Module then Ruby2Ruby.translate object
+      when Method then Ruby2Ruby.translate object.owner, object.name
+      else object.to_s
+      end
+    end
   end
 
   def editor_eval
@@ -59,8 +67,11 @@ module MyIRB
   end
 
   def editor_format_for a_value
-    return :rb unless a_value
-    :yaml
+    if not a_value or (defined? Ruby2Ruby and a_value.is_a? Module or a_value.is_a? Method)
+      :rb
+    else
+      :yaml
+    end
   end
 
   def last_edit name = nil

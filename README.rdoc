@@ -25,10 +25,11 @@ Tries to load a couple of libraries but does not fail if unable to load them. I 
 
 <b>Most of this is optional</b>, so if you installed it, but don't wanne use it, simply remove it from the list.
 
-
 To use all of this features, do the following:
 
-  sudo gem install map_by_method what_methods rush english
+  sudo gem install map_by_method what_methods rush english ruby2ruby
+
+Currently what_methods is not running on 1.9 and rush is neither running on 1.9 nor on Rubinius.
 
 This are the libraries:
 * irb/completion: auto completion (tab tab)
@@ -48,6 +49,7 @@ This are the libraries:
 * english/inflect (String#plural and such)
 * english/string (String#word_wrap and such)
 * english/style (String#camelcase and such)
+* ruby2ruby
 
 == .config/irb/color.rb
 * Simple ANSI color methods (in_blue, underlined, ...)
@@ -85,6 +87,10 @@ This are the libraries:
     last_edit :foo
     last_edit :bar
     last_edit :foo
+    # (only if you have ruby2ruby installed):
+    vi MyIRB
+    def foo; :bar; end
+    vi method(:foo)
 * File.write (like File.read):
     File.write "foo.txt", "bar"
 
