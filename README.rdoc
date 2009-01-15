@@ -44,7 +44,6 @@ This are the libraries:
 * rubygems
 * map_by_method (http://drnicwilliams.com/category/ruby/gems/map_by_method/)
 * what_methods (http://redhanded.hobix.com/inspect/stickItInYourIrbrcMethodfinder.html)
-* rush (http://rush.heroku.com/)
 * english/array (Array#conjunction, like Array#to_sentence from ActiveSupport)
 * english/inflect (String#plural and such)
 * english/string (String#word_wrap and such)

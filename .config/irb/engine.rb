@@ -37,4 +37,6 @@ module MyIRB
     @impl << " " << RUBY_ENGINE_VERSION
   end
 
+  require File.join(File.dirname(__FILE__), "engine", RUBY_ENGINE)
+
 end

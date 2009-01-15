@@ -7,7 +7,7 @@ module MyIRB
   %w[
     irb/completion irb/ext/save-history
     yaml English fileutils date open-uri pp monitor
-    rubygems map_by_method what_methods rush
+    rubygems map_by_method what_methods
     english/array english/inflect english/string
     english/style english/style_orm ruby2ruby
   ].each do |lib|
