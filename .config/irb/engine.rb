@@ -2,8 +2,17 @@ module MyIRB
 
   include Rubinius if defined? Rubinius
 
-  ::RUBY_ENGINE = "ruby" unless defined? ::RUBY_ENGINE
+  unless defined? RUBY_ENGINE
+    if defined? JRUBY_VERSION
+      ::RUBY_ENGINE = "jruby"
+    elsif defined? Rubinius
+      ::RUBY_ENGINE = "rbx"
+    elsif
+      ::RUBY_ENGINE = "ruby"
+    end
+  end
   unless RUBY_ENGINE.frozen?
+    RUBY_ENGINE.replace "rbx" if RUBY_ENGINE == "rubinius"
     RUBY_ENGINE.downcase!
     RUBY_ENGINE.freeze
   end
