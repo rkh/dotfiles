@@ -5,7 +5,7 @@ module MyIRB
   print "Loading Libraries: \033[1m["
 
   %w[
-    irb/completion irb/ext/save-history
+    irb/completion irb/ext/save-history thread
     yaml English fileutils date open-uri pp monitor
     rubygems map_by_method what_methods
     english/array english/inflect english/string
