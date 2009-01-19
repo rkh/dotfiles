@@ -85,7 +85,7 @@ module MyIRB
     name
   end
 
-  ["vi", "vim", "gvim -f", "evim -f", "ex", "joe", "kate", "nano"].each do |cmd|
+  ["vi", "vim", "gvim -f", "evim -f", "ex", "joe", "kate", "nano", "e3vi"].each do |cmd|
     eval %[
       def #{cmd[/^[^ ]*/]} format = nil, default = nil
         editor format, default, "#{cmd} 2>/dev/null"
