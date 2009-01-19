@@ -1,0 +1,6 @@
+#!/bin/bash
+
+j=0
+for i in $(equery -C s | grep -o "size(.*)" | sed 's/size(//g' | sed 's/)//g'); do j=$[j+i]; done
+echo "$[j/1024] KiB = $[j/1024/1024] MiB"
+

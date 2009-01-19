@@ -1,0 +1,6 @@
+#!/bin/bash
+
+j=0
+for i in $(equery -C s); do j=$[j+1]; done
+echo "$[j] Packages installed"
+

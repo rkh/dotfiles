@@ -1,0 +1,49 @@
+#!/bin/bash
+# convert anything mplayer plays to an ogg or mp3 file
+
+if [ $# -ne 3 ]
+then
+	echo "alltomp3 Usage:"
+	echo "alltomp3 \[hold or remove\] \[inputfile\] \[format\]"
+	echo "hold is the option \"1\" and holds the original file"
+	echo "remove is any other char not equal 1 and removes the original file"
+	echo "mp3 format is exported with the option \"1\" whereas ogg format is exported with any other char"
+	exit 1
+fi
+
+remove="$1"
+file="$2"
+format="$3"
+
+if [ $remove -ne 1 ]
+then
+	echo "You\'ve chosen to encode and remove the file:"
+	echo $file
+fi
+
+if [ $remove -eq 1 ]
+then
+	echo "You\'ve chosen to encode and hold the file:"
+	echo $file
+fi
+
+mplayer -vo null -vc null -ao pcm "$file"
+
+if [ $format -eq 1 ]
+then
+lame -v -V 1 -h -m j audiodump.wav "${file%.*}.mp3"
+fi
+
+if [ $format -ne 1 ]
+then
+oggenc -q 10 audiodump.wav
+mv audiodump.ogg "${file%.*}.ogg"
+fi
+
+rm -f audiodump.wav
+
+if [ $remove -ne 1 ]
+then
+	rm -f "$file"
+fi
+exit 1
