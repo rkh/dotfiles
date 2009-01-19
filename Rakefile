@@ -4,8 +4,16 @@ namespace :install do
 
   def install name, *files
     desc "installs #{name} configuration"
-    task(name) { sh Dir[*files].collect { |f| "ln -s #{f} ~/#{f}" }.join(" && ") }
-    task :all => :name
+    task(name) do
+      Dir[*files].collect do |file|
+        full = File.join Dir.pwd, file
+        Dir.chdir ENV["HOME"] do
+          mkdir_p File.dirname(file) 
+          sh "ln -s #{full} #{file}"
+        end
+      end
+    end
+    task :all => name
   end
 
   install :irb, ".irbrc", ".config/irb/*.rb"
