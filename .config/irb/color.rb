@@ -23,11 +23,11 @@ module MyIRB
   end
 
   FG_COLORS.each do |color, ansi|
-    eval %x|
+    eval %{
       def in_#{color} *params
         FG_COLORS[:#{color}] + params.join("\n") + ANSI_MISC[:reset]
       end
-    |
+    }
     module_function "in_#{color}"
   end
 
