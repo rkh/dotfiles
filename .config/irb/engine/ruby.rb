@@ -1,5 +1,7 @@
 module MyIRB
 
+  engine_should_be "1.8.7"
+
   def get_source an_object
     begin
       case an_object
