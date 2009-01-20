@@ -2,3 +2,4 @@ nbproject
 *~
 *.rbc
 /.vim/sessions/**/*
+*.pyc
