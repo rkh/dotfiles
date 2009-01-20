@@ -1,5 +1,8 @@
 module MyIRB
 
+  # Place a general implementation of implementation specific methods in here
+  # and overwrite it in engine/*.rb
+
   include Rubinius if defined? Rubinius
 
   unless defined? RUBY_ENGINE
@@ -19,6 +22,23 @@ module MyIRB
 
   ::RUBY_ENGINE_VERSION = const_get("#{RUBY_ENGINE.upcase}_VERSION")
 
+  unless defined? RUBY_DESCRIPTION
+    ::RUBY_DESCRIPTION = "#{RUBY_ENGINE} #{RUBY_ENGINE_VERSION} "
+    unless RUBY_ENGINE == "ruby"
+      ::RUBY_DESCRIPTION << "(ruby #{RUBY_VERSION}"
+      ::RUBY_DESCRIPTION << " patchlevel #{RUBY_PATCHLEVEL}" if defined? RUBY_PATCHLEVEL
+      ::RUBY_DESCRIPTION << ") "
+    end
+    if defined? RUBY_RELEASE_DATE
+      ::RUBY_DESCRIPTION << "("
+      ::RUBY_DESCRIPTION << BUILDREV[0..8] << " " if defined? BUILDREV
+      ::RUBY_DESCRIPTION << RUBY_RELEASE_DATE << ") "
+    end
+    ::RUBY_DESCRIPTION << "[#{RUBY_PLATFORM}]"
+  end
+
+  puts RUBY_DESCRIPTION
+
   # This should be changed in other setups / operation systems.
   def ruby_binary
     @@ruby_binary ||= [ "/usr/bin/#{RUBY_ENGINE}#{RUBY_ENGINE_VERSION}",
@@ -28,24 +48,50 @@ module MyIRB
       File.exists? bin
     end
   end
-
-  def jruby?; RUBY_ENGINE == "jruby"; end
-  def mri?;   RUBY_ENGINE == "ruby";  end
-  def rbx?;   RUBY_ENGINE == "rbx";   end
+  
+  def jruby?;    RUBY_ENGINE == "jruby";    end
+  def mri?;      RUBY_ENGINE == "ruby";     end
+  def rbx?;      RUBY_ENGINE == "rbx";      end
+  def ironruby?; RUBY_ENGINE == "ironruby"; end
+  def macruby?;  RUBY_ENGINE == "macruby";  end
 
   alias rubinius? rbx?
 
-  def self.impl
-    return @impl if @impl
-    @impl = case RUBY_ENGINE
-            when "ruby"  then "MRI"
-            when "jruby" then "JRuby"
-            when "rbx"   then "Rubinius"
-            else RUBY_ENGINE
-            end
-    @impl << " " << RUBY_ENGINE_VERSION
+  def ruby_engine pretty = true
+    return RUBY_ENGINE unless pretty
+    case RUBY_ENGINE
+    when "ruby"  then "CRuby"
+    when "rbx"   then "Rubinius"
+    when /ruby$/ then RUBY_ENGINE.capitalize.gsub("ruby", "Ruby")
+    end
   end
 
-  require File.join(File.dirname(__FILE__), "engine", RUBY_ENGINE)
+  module_function :ruby_engine
+
+  # this is used for the prompt. should go there.
+  def self.impl
+    return @impl if @impl
+    @impl = ruby_engine << " " << RUBY_ENGINE_VERSION
+  end
+
+  def get_source an_object
+    raise ArgumentError, "Don't know how to get source of #{an_object}" unless an_object.is_a?String
+    an_object
+  end
+
+  def self.engine_should_be version
+    unless version
+      $stderr.puts "I dont't think this works properly in #{ruby_engine}."
+      return
+    end
+    if RUBY_ENGINE_VERSION < version
+      $stderr.puts "You should update #{ruby_engine} to at least #{version}."
+    end
+  end
+
+  begin
+    require File.join(File.dirname(__FILE__), "engine", RUBY_ENGINE)
+  rescue LoadError
+  end
   
 end

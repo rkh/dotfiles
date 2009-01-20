@@ -1,6 +1,7 @@
 module MyIRB
 
   raise LoadError, "This needs to be Rubinius." unless rubinius?
+  engine_should_be "0.9"
 
   def get_source an_object
     case an_object
