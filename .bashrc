@@ -103,7 +103,7 @@ export LIBGL_ALWAYS_INDIRECT=1
 export INTEL_BATCH=1
 
 # Show the current git branch
-source ~/.git-completion.sh
+source ~/bin/git-completion.sh
 GIT='`__git_ps1`'
 PS1="$PS1$GIT"
 
