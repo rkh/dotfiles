@@ -1,5 +1,7 @@
 # I use this in my .bashrc to have nice VCS stuff.
+# Tim Felgentreff (09/20/01): Simplify for speedup, use the git-completion script for git
 
+source ~/bin/git-completion.sh
 
 _bold=$(tput bold)
 _normal=$(tput sgr0)
@@ -14,16 +16,8 @@ __prompt_command() {
 	}
 
 	git_dir() {
-		base_dir=$(git rev-parse --show-cdup 2>/dev/null) || return 1
-		if [ -n "$base_dir" ]; then
-			base_dir=`cd $base_dir; pwd`
-		else
-			base_dir=$PWD
-		fi
-		sub_dir=$(git rev-parse --show-prefix)
-		sub_dir="/${sub_dir%/}"
-		ref=$(git symbolic-ref -q HEAD || git name-rev --name-only HEAD 2>/dev/null)
-		ref=${ref#refs/heads/}
+	   	ref=`__git_ps1`
+		if [ -z $ref ]; then return 1; fi
 		vcs="git"
 		alias pull="git pull"
 		alias commit="git commit -v -a"
@@ -33,26 +27,30 @@ __prompt_command() {
 
 	svn_dir() {
 		[ -d ".svn" ] || return 1
-		base_dir="."
-		while [ -d "$base_dir/../.svn" ]; do base_dir="$base_dir/.."; done
-		base_dir=`cd $base_dir; pwd`
-		sub_dir="/$(sub_dir "${base_dir}")"
-		ref=$(svn info "$base_dir" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r":"$0 }')
+		ref=$(svn info "$base_dir" | awk '/^URL/ { sub(".*/","",$0); r=$0 } /^Revision/ { sub("[^0-9]*","",$0); print r":"$0 }')		
+		# this is too slow...
+		#if [ -n $(svn status -q) ]; then
+		#   ref="\e[0;31m$ref\e[m"
+		#fi 
+		ref="[$ref]"
 		vcs="svn"
 		alias pull="svn up"
 		alias commit="svn commit"
 		alias push="svn ci"
 		alias revert="svn revert"
 	}
+	
+	
+	cvs_dir() {
+		[ -d "CVS" ] || return 1
+		vcs="cvs"
+		alias pull="cvs update"
+		alias commit="cvs commit"
+		alias push="cvs commit"
+	}
 
 	bzr_dir() {
 		base_dir=$(bzr root 2>/dev/null) || return 1
-		if [ -n "$base_dir" ]; then
-			base_dir=`cd $base_dir; pwd`
-		else
-			base_dir=$PWD
-		fi
-		sub_dir="/$(sub_dir "${base_dir}")"
 		ref=$(bzr revno 2>/dev/null)
 		vcs="bzr"
 		alias pull="bzr pull"
@@ -62,25 +60,19 @@ __prompt_command() {
 	}
 	
 
-	git_dir || svn_dir || bzr_dir
+	git_dir || svn_dir || cvs_dir
 
 	if [ -n "$vcs" ]; then
-	   	echo "Working in $vcs"
 		alias st="$vcs status"
 		alias d="$vcs diff"
 		alias up="pull"
 		alias cdb="cd $base_dir"
-		base_dir="$(basename "${base_dir}")"
-		working_on="$base_dir:"
-		__vcs_prefix="($vcs)"
-		__vcs_ref="[$ref]"
-		__vcs_sub_dir="${sub_dir}"
-		__vcs_base_dir="${base_dir/$HOME/~}"
-		PS1="$__vcs_prefix\[${_bold}\]${__vcs_base_dir}\[${_normal}\]${__vcs_ref}\[${_bold}\]${__vcs_sub_dir}\[${_normal}\]"	
+		__vcs_ref="$vcs:$ref"
+		echo " $__vcs_ref"
 	fi
 }
 
-export PROMPT_COMMAND=__prompt_command
+#export PROMPT_COMMAND=__prompt_command
 
 # Show the currently running command in the terminal title:
 # http://www.davidpashley.com/articles/xterm-titles-with-bash.html

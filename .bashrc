@@ -103,13 +103,16 @@ export LIBGL_ALWAYS_INDIRECT=1
 export INTEL_BATCH=1
 
 # Show the current git branch
-source ~/bin/git-completion.sh
-GIT='`__git_ps1`'
-PS1="$PS1$GIT"
+#source ~/bin/git-completion.sh
+source ~/bin/bash_vcs.sh
+#GIT='`__git_ps1`'
+VCS='`echo -e $(__prompt_command)`'
+#PS1="$PS1$GIT"
+PS1="$PS1 $VCS"
 
 # One-TAB-Completion
 set show-all-if-ambiguous on
 # Show last commands exit-code by smiley
-PS1="$PS1\`if [ \$? = 0 ]; then echo -e '\[\033[01;32m\]:)'; else echo -e '\[\033[01;31m\]:('; fi\`\[\033[00m\] "
+PS1="$PS1 \`if [ \$? = 0 ]; then echo -e '\[\033[01;32m\]:)'; else echo -e '\[\033[01;31m\]:('; fi\`\[\033[00m\] "
 
 
