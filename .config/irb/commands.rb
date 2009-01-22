@@ -109,6 +109,23 @@ module MyIRB
 
 end
 
+class Class
+  def publicize_methods
+    saved_private_instance_methods = self.private_instance_methods
+    class_eval { public(*saved_private_instance_methods) }
+    yield self
+    class_eval { private(*saved_private_instance_methods) }
+  end
+end
+
+class Object
+  unless respond_to? :tap
+    def tap
+      yield(self)
+    end
+  end
+end
+
 class << ENV
   def to_yaml
     to_hash.to_yaml
