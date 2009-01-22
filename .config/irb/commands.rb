@@ -48,7 +48,7 @@ module MyIRB
   def editor_preload format, object
     case format
     when :yaml then object.to_yaml
-    when :rb   then get_source object
+    when :rb   then object ? get_source(object) : ""
     end
   end
 
@@ -69,14 +69,26 @@ module MyIRB
     end
   end
 
-  def last_edit name = nil
+  def get_edit name = nil
+    @@edits        ||= {}
+    @@editor_stack ||= {}
+    raise ArgumentError, "No edits so far." if @@editor_stack.empty?
     if name
-      @@edits ||= {}
-      editor(*@@edits[name])
-      name_edit name
+      raise ArgumentError, "No edit called #{name}." unless @@edits[name]
+      @@edits[name]
     else
-      editor(*@@editor_stack[-1])
+      @@editor_stack[-1]
     end
+  end
+
+  def get_editor_source name = nil
+    get_edit(name)[1]
+  end
+
+  def last_edit name = nil
+    result = editor(*get_edit(name))
+    name_edit name if name
+    result
   end
 
   def name_edit name
