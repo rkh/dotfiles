@@ -84,9 +84,10 @@ module MyIRB
       $stderr.puts "I dont't think this works properly in #{ruby_engine}."
       return
     end
-    if RUBY_ENGINE_VERSION < version
-      $stderr.puts "You should update #{ruby_engine} to at least #{version}."
-    end
+    splited = version.split "."
+    update  = false
+    RUBY_ENGINE_VERSION.each_with_index { |v,i| update = true if v.to_i < splited[i].to_i }
+    $stderr.puts "\033[1;31mYou should update #{ruby_engine} to at least #{version}.\033[0m" if update
   end
 
   begin
