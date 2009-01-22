@@ -11,7 +11,7 @@ module MyIRB
     english/array english/inflect english/string
     english/style english/style_orm ruby2ruby
     hpricot stringio mechanize stored_hash
-    duration
+    duration highline
   ].each do |lib|
     begin
       require lib
@@ -82,6 +82,16 @@ module MyIRB
   end
 
   module_function :method_pattern
+
+  def needs(*objects)
+    object = objects.shift
+    if object
+      raise LoadError, "needs #{object}" unless eval("defined? #{object}")
+      needs(*objects)
+    end
+  end
+
+  module_function :needs
 
 end
 
