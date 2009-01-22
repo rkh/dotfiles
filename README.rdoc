@@ -32,6 +32,8 @@ To use all of this features, do the following:
 
 Currently what_methods is not running on 1.9.
 
+On Windows, you should also install Win32::Clipboard.
+
 This are the libraries:
 * irb/completion: auto completion (tab tab)
 * irb/ext/save-history: readline history from former sessions
@@ -102,6 +104,7 @@ This are the libraries:
     vi method(:foo)
     edit_to_file "foo.rb"
     edit_to_gist
+    edit_to_clipboard
 * File.write (like File.read):
     File.write "foo.txt", "bar"
 * Class#publicize_methods - http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html

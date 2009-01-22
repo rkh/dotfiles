@@ -100,6 +100,16 @@ module MyIRB
     Gist.post name
   end
 
+  def edit_to_clipboad name = nil
+    begin
+      require 'win32/clipboard'
+      Win32::Clipboard.set_data get_editor_source(name)
+    rescue LoadError
+      RUBY_PLATFORM =~ /darwin/ ? cmd = "pbcopy" : cmd = "xclip"
+      IO.popen(cmd, "w") { |c| c.write get_editor_source(name) }
+    end
+  end
+
   def name_edit name
     @@edits ||= {}
     @@edits[name] = @@editor_stack.last
