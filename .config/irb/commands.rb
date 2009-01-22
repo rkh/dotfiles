@@ -91,6 +91,15 @@ module MyIRB
     result
   end
 
+  def edit_to_file name, file = nil
+    name, file = nil, name unless file
+    File.write file, get_editor_source(name)
+  end
+
+  def edit_to_gist name = nil
+    Gist.post name
+  end
+
   def name_edit name
     @@edits ||= {}
     @@edits[name] = @@editor_stack.last

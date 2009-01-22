@@ -87,18 +87,21 @@ This are the libraries:
     vi :yaml
     last_edit
     name_edit :foo
-    Gist.post :foo # if .config/irb/gist is loaded
+    edit_to_gist :foo # if .config/irb/gist is loaded
+    edit_to_file :foo, "foo.yaml"
     vi ["i wonder what...", "... will happen?", { "foo" => "bar" }]
     name_edit :bar
     last_edit :foo
     last_edit :bar
+    edit_to_file "bar.yaml"
     last_edit :foo
-    Gist.post :foo
+    edit_to_gist :foo
     # (only if you have ruby2ruby installed):
     vi MyIRB
     def foo; :bar; end
     vi method(:foo)
-    Gist.post
+    edit_to_file "foo.rb"
+    edit_to_gist
 * File.write (like File.read):
     File.write "foo.txt", "bar"
 * Class#publicize_methods - http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html
