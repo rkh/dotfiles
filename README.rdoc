@@ -27,7 +27,8 @@ Tries to load a couple of libraries but does not fail if unable to load them. I 
 
 To use all of this features, do the following:
 
-  sudo gem install map_by_method what_methods english ruby2ruby
+  sudo gem sources -a http://gems.github.com
+  sudo gem install map_by_method what_methods english ruby2ruby hpricot mechanize duration rkh-stored_hash
 
 Currently what_methods is not running on 1.9.
 
@@ -39,6 +40,7 @@ This are the libraries:
 * fileutils (it does "include FileUtils::Verbose")
 * date
 * open-uri
+* stringio
 * pp
 * monitor (I use this internally)
 * rubygems
@@ -49,6 +51,10 @@ This are the libraries:
 * english/string (String#word_wrap and such)
 * english/style (String#camelcase and such)
 * ruby2ruby
+* hpricot
+* mechanize
+* stored_hash
+* duration
 
 == .config/irb/color.rb
 * Simple ANSI color methods (in_blue, underlined, ...)
@@ -92,6 +98,8 @@ This are the libraries:
     vi method(:foo)
 * File.write (like File.read):
     File.write "foo.txt", "bar"
+* Class#publicize_methods - http://blog.jayfields.com/2007/11/ruby-testing-private-methods.html
+* Ensures you have Object#tap
 
 == .config/irb/rails.rb
 * defines is_rails?
