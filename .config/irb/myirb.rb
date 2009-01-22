@@ -11,6 +11,7 @@ module MyIRB
     english/array english/inflect english/string
     english/style english/style_orm ruby2ruby
     hpricot stringio mechanize stored_hash
+    duration
   ].each do |lib|
     begin
       require lib
@@ -26,6 +27,15 @@ module MyIRB
     print "  Unable to load #{UNABLE_TO_LOAD.size} libraries. See UNABLE_TO_LOAD."
   end
   puts
+
+  at_exit { puts "Have a nice day!" }
+
+  if defined? Duration
+    IRB_START_TIME = Time.now
+    at_exit do
+      puts "irb session duration: #{Duration.new(Time.now - IRB_START_TIME)}"
+    end
+  end
 
   include FileUtils::Verbose
 
