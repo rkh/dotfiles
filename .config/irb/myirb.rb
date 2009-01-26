@@ -1,32 +1,77 @@
 module MyIRB
 
   UNABLE_TO_LOAD = []
-
-  print "Loading Libraries: \033[1m["
-
-  %w[
+  
+  libs = %w[
     irb/completion irb/ext/save-history thread
     yaml English fileutils date open-uri pp monitor
     rubygems map_by_method what_methods
     english/array english/inflect english/string
     english/style english/style_orm ruby2ruby
     hpricot stringio mechanize stored_hash
-    duration highline
-  ].each do |lib|
-    begin
-      require lib
-      print "\033[0;32m|"
-    rescue LoadError
-      UNABLE_TO_LOAD << lib
-      print "\033[0;31m|"
-    end
+    duration highline ]
+
+  def catch_stdout
+    verbose  = $VERBOSE
+    $VERBOSE = nil
+    stdout   = STDOUT
+    io       = StringIO.new
+    eval "::STDOUT = $stdout = io"
+    yield
+    eval "::STDOUT = $stdout = stdout"
+    $VERBOSE = verbose
+    io.rewind
+    io.read
   end
 
-  print "\033[0m\033[1m]\033[0m"
-  unless UNABLE_TO_LOAD.empty?
-    print "  Unable to load #{UNABLE_TO_LOAD.size} libraries. See UNABLE_TO_LOAD."
+  module_function :catch_stdout
+
+  print "Loading Libraries: \033[1m[\033[0m"
+  print(" " * libs.size)
+  print "\033[1m]\033[0m "
+
+  while lib = libs.shift
+    info = "  (loading #{lib})"
+    print "\033[0;37m" + info
+    print "\033[#{3 + info.length + libs.size}D"
+    begin
+      require lib
+      print "\033[1;32m|"
+    rescue LoadError
+      UNABLE_TO_LOAD << lib
+      print "\033[1;31m|"
+    end
+   # print "\033[1;33m|"
+    print "\033[#{2 + libs.size}C"
+    print(" " * info.length)
+    print "\033[#{info.length}D"
   end
-  puts
+
+  print "\033[0m"
+  
+  unless UNABLE_TO_LOAD.empty?
+    print "Unable to load #{UNABLE_TO_LOAD.size} libraries. See UNABLE_TO_LOAD."
+  end
+
+  puts 
+
+#  print "Loading Libraries: \033[1m["
+#
+#  .each do |lib|
+#    begin
+#      require lib
+#      print "\033[0;32m|"
+#    rescue LoadError
+#      UNABLE_TO_LOAD << lib
+#      
+#    end
+#  end
+#
+#  print "\033[0m\033[1m]\033[0m"
+#  unless UNABLE_TO_LOAD.empty?
+#    print "  Unable to load #{UNABLE_TO_LOAD.size} libraries. See UNABLE_TO_LOAD."
+#  end
+#  puts
 
   at_exit { puts "Have a nice day!" }
 
