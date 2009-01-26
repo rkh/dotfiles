@@ -86,7 +86,15 @@ module MyIRB
     end
     splited = version.split "."
     update  = false
-    RUBY_ENGINE_VERSION.each_with_index { |v,i| update = true if v.to_i < splited[i].to_i }
+    RUBY_ENGINE_VERSION.split(".").each_with_index do |v,i|
+      case v.to_i <=> splited[i].to_i
+      when -1
+        update = true
+        break
+      when 1
+        break
+      end
+    end
     $stderr.puts "\033[1;31mYou should update #{ruby_engine} to at least #{version}.\033[0m" if update
   end
 
