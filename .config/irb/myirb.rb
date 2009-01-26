@@ -53,25 +53,7 @@ module MyIRB
     print "Unable to load #{UNABLE_TO_LOAD.size} libraries. See UNABLE_TO_LOAD."
   end
 
-  puts 
-
-#  print "Loading Libraries: \033[1m["
-#
-#  .each do |lib|
-#    begin
-#      require lib
-#      print "\033[0;32m|"
-#    rescue LoadError
-#      UNABLE_TO_LOAD << lib
-#      
-#    end
-#  end
-#
-#  print "\033[0m\033[1m]\033[0m"
-#  unless UNABLE_TO_LOAD.empty?
-#    print "  Unable to load #{UNABLE_TO_LOAD.size} libraries. See UNABLE_TO_LOAD."
-#  end
-#  puts
+  puts
 
   at_exit { puts "Have a nice day!" }
 
