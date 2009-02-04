@@ -10,4 +10,7 @@ if !exists('s:initLatexSuite')
 	silent! do LatexSuite User LatexSuiteInitPost
 endif
 
+set sw=2
+set iskeyword+=:
+
 silent! do LatexSuite User LatexSuiteFileType
