@@ -1,6 +1,11 @@
 if ENV["IRBAL"] == "1"
-  $: << "/home/konstantin/Workspace/irbal/lib"
+
+
+  $: << "/home/konstantin/Workspace/ruby/irbal/lib"
   require "irbal"
+
+  IRBal.setup { try_loading "rubygems" }
+
 else
 
   %w[myirb engine color rails commands gist].each do |lib|
