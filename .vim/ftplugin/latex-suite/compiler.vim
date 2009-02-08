@@ -511,7 +511,8 @@ function! Tex_CompileMultipleTimes()
 
 		" The first time we see if we need to run bibtex and if the .bbl file
 		" changes, we will rerun latex.
-		if runCount == 0 && Tex_IsPresentInFile('\\bibdata', mainFileName_root.'.aux')
+		if runCount == 0 
+		  " if (Tex_IsPresentInFile('\\bibliography', mainFileName_root.'.aux'))
 			let bibFileName = mainFileName_root.'.bbl'
 
 			let biblinesBefore = Tex_CatFile(bibFileName)
@@ -530,6 +531,7 @@ function! Tex_CompileMultipleTimes()
 				call Tex_Debug('Tex_CompileMultipleTimes: Need to rerun because bibliography file changed...', 'comp')
 				let needToRerun = 1
 			endif
+		  " endif
 		endif
 
 		" check if latex asks us to rerun
