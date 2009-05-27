@@ -36,7 +36,9 @@ fi
 
 # OS specific config.
 case `uname` in
-  Darwin) ;;
+  Darwin)
+	. .git_completion
+	;;
   Linux) ;;
   SunOS)
     stty istrip
