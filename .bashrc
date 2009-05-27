@@ -73,9 +73,11 @@ case `uname` in
 		export EDITOR="mate -wl1"
 		export SVN_EDITOR="mate -wl1"
 		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
+		alias ls='ls -G'
 		;;
   Linux)
 		alias sudo="sudo -E"
+		alias ls='ls --color=auto'
 		;;
   SunOS)
     stty istrip
@@ -136,16 +138,11 @@ case "$TERM" in
   *) ;;
 esac
 
-# Enable color support of ls and also add handy aliases.
-if [ -x /usr/bin/dircolors ]; then
-    eval "`dircolors -b`"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+# Enable color support. Don't add ls here, it behaves different on Darwin/BSD.
+if [ -x /usr/bin/dircolors ]; then eval "`dircolors -b`"; fi
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # Some more aliases.
 alias ll='ls -l'
