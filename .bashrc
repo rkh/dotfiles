@@ -57,12 +57,14 @@ fi
 # OS specific config.
 case `uname` in
   Darwin)
-	if [ -f ~/.git_completion ]; then
-	  . ~/.git_completion
-	else
-	  echo "~/.git_completion is missing, expect trouble!"
-	fi
-	;;
+		if [ -f ~/.git_completion ]; then
+	  	. ~/.git_completion
+			else
+	  	echo "~/.git_completion is missing, expect trouble!"
+		fi
+		export EDITOR="mate -wl1"
+		export SVN_EDITOR="mate -wl1"
+		;;
   Linux) ;;
   SunOS)
     stty istrip
