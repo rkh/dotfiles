@@ -26,7 +26,7 @@ if [ -n "$SSH_CLIENT" ]; then
   ps1_host="\h"
 fi
 
-# Setting up hadoop
+# Setting up hadoop.
 if [ `which hadoop-config.sh 2>/dev/null` ]; then
   . `which hadoop-config.sh`
   if [ `which jaql 2>/dev/null` ]; then
@@ -34,10 +34,34 @@ if [ `which hadoop-config.sh 2>/dev/null` ]; then
   fi
 fi
 
+# Setting up git.
+if [ ! -f ~/.gitconfig ]; then
+	git config --global alias.b branch
+	git config --global alias.c clone
+	git config --global alias.ci commit
+	git config --global alias.co checkout
+	git config --global alias.st status
+	git config --global user.name "Konstantin Haase"
+	git config --global user.email "konstantin.mailinglists@googlemail.com"
+	git config --global color.branch auto
+	git config --global color.diff auto
+	git config --global color.grep auto
+	git config --global color.interactive auto
+	git config --global color.interactive ui
+	git config --global help.autocorrect 1
+	if [ "Darwin" = $(uname) ]; then git config --global core.editor "mate -wl1"; fi
+	git config --global github.user "rkh"
+	echo "please add your github token to ~/.gitconf"
+fi
+
 # OS specific config.
 case `uname` in
   Darwin)
-	. .git_completion
+	if [ -f ~/.git_completion ]; then
+	  . ~/.git_completion
+	else
+	  echo "~/.git_completion is missing, expect trouble!"
+	fi
 	;;
   Linux) ;;
   SunOS)
