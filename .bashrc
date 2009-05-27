@@ -7,11 +7,16 @@ if [ -f /etc/bashrc ]; then . /etc/bashrc; fi
 # General Settings
 export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:.:./bin"
 export PWD_LENGTH=30
+shopt -s dotglob
+shopt -s cdspell
+shopt -s checkwinsize
+set -o ignoreeof
+set -o noclobber
 
 # Bash History
+export HISTIGNORE="&:ls:ll:la:l.:pwd:exit:clear"
 export HISTCONTROL=ignoreboth
 shopt -s histappend          
-shopt -s checkwinsize 
 
 # Ruby Settings
 export RUBY_VERSION=1.8.7
@@ -20,7 +25,10 @@ export GEM_GLOBAL="install|cleanup|generate_index|pristine|rdoc|update"
 export PATH=/opt/ruby/bin:$PATH
 export SYDNEY=1
 
-# ssh specific config
+# Disable XON/XOFF flow control (^s/^q).
+stty -ixon
+
+# SSH specific config.
 if [ -n "$SSH_CLIENT" ]; then
   # show host only if this is an ssh session
   ps1_host="\h"
