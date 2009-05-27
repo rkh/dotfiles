@@ -88,7 +88,7 @@ ps1_pwd='\[\033[00;32m\]$(short_pwd)\[\033[00m\]'
 if [ -n "$ps1_user" ] && [ -n "$ps1_host" ]; then ps1_user="$ps1_user@"; fi
 PS1="$ps1_user$ps1_host"
 if [ "$PS1" != "" ]; then PS1="$PS1\[\033[00m\]:"; fi
-export PS1="$PS1$ps1_pwd$ps1_vcs $ps1_ruby\[\033[01m\]→\[\033[00m\] "
+export PS1="$PS1$ps1_pwd$ps1_vcs $ps1_ruby\[\033[01;32m\]→\[\033[00m\] "
 
 # Make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
