@@ -75,8 +75,14 @@ esac
 
 # Don't show user name if it's me. make root red.
 case `whoami` in
-  konstantin|khaase|konstantin.haase|rkh) ;;
-  root) ps1_user="\[\033[01;31m\]\u" ;;
+  konstantin|khaase|konstantin.haase|rkh)
+		alias sudo="sudo -E"
+		;;
+  root)
+		ps1_user="\[\033[01;31m\]\u"
+		echo "root will be logged out after 10 minutes without input or job"
+		export TMOUT=600
+		;;
   *) ps1_user="\[\033[01;32m\]\u" ;;
 esac
 
@@ -143,7 +149,6 @@ alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
 alias pdflatex='pdflatex -shell-escape'
-alias sudo='sudo -E'
 alias vi='vim'
 
 # Enable programmable completion features.
