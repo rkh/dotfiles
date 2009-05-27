@@ -1,45 +1,57 @@
-# If not running interactively, don't do anything
+# If not running interactively, don't do anything.
 [ -z "$PS1" ] && return
 
-# don't put duplicate lines in the history. See bash(1) for more options
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
-export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
-# ... or force ignoredups and ignorespace
+# Source global definitions
+if [ -f /etc/bashrc ]; then . /etc/bashrc; fi  
+
+# General Settings
+export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:.:./bin"
+
+# Bash History
 export HISTCONTROL=ignoreboth
+shopt -s histappend          
+shopt -s checkwinsize 
 
-# append to the history file, don't overwrite it
-shopt -s histappend
+# Ruby Settings
+export RUBY_VERSION=1.8.7
+export RUBYOPT=rubygems
+export GEM_GLOBAL="install|cleanup|generate_index|pristine|rdoc|update"
+export PATH=/opt/ruby/bin:$PATH
+export SYDNEY=1
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+# ssh specific config
+if [ -n "$SSH_CLIENT" ]; then
+  # show host only if this is an ssh session
+  ps1_host="\h"
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
+# Setting up hadoop
+if [ `which hadoop-config.sh 2>/dev/null` ]; then
+  . `which hadoop-config.sh`
+  if [ `which jaql 2>/dev/null` ]; then
+    export JAQL_HOME=$(dirname $(dirname $(which jaql)))
+  fi
+fi
+
+# OS specific config.
+case `uname` in
+  Darwin) ;;
+  Linux) ;;
+  SunOS)
+    stty istrip
+    export PATH=$PATH:/etc
+    ;;
+  *) echo "OS unknown to bashrc." ;;
 esac
-force_color_prompt=yes
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
+# Don't show user name if it's me. make root red.
+case `whoami` in
+  konstantin|khaase|konstantin.haase|rkh) ;;
+  root) ps1_user="\[\033[01;31m\]\u" ;;
+  *) ps1_user="\[\033[01;32m\]\u" ;;
+esac
 
-# Fancy svn status in prompt
+# VCS in prompt.
 parse_svn_branch() {
   parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'
 }
@@ -47,23 +59,30 @@ parse_svn_url() {
   svn info 2>/dev/null | sed -ne 's#^URL: ##p'
 }
 parse_svn_repository_root() {
-  svn info 2>/dev/null | sed -ne 's#^Basis des Projektarchivs: ##p'
+  LANG=C svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[00;33m\]$(__git_ps1 " (git: %s)")$(parse_svn_branch)\[\033[00m\] \[\033[01m\]\$\[\033[00m\] '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u:\w$(__git_ps1 " (git: %s)")$(parse_svn_branch) \$ '
-fi
-unset color_prompt force_color_prompt
+ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")$(parse_svn_branch)\[\033[00m\]'
 
-# If this is an xterm set the title to user@host:dir
+show_ruby_version() {
+  if [ -f "Rakefile" ]; then echo -n "$RUBY_VERSION "; fi
+}
+
+ps1_ruby='\[\033[01;31m\]$(show_ruby_version)\[\033[00m\]'
+
+# Building $PS1.
+if [ -n "$ps1_user" ] && [ -n "$ps1_host" ]; then ps1_user="$ps1_user@"; fi
+PS1="$ps1_user$ps1_host"
+if [ "$PS1" != "" ]; then PS1="$PS1\[\033[00m\]:"; fi
+export PS1="$PS1\[\033[01;34m\]\w\[\033[00m\]$ps1_vcs $ps1_ruby\[\033[01m\]→\[\033[00m\] "
+
+# Make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
+
+# If this is an xterm set the title to user@host:dir.
 case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
+  xterm*|rxvt*) export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"' ;;
+  *) ;;
 esac
 
 # enable color support of ls and also add handy aliases
@@ -77,27 +96,9 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-alias ll='ls -l'
-alias la='ls -A'
-alias l='ls -CF'
+# Enable programmable completion features.
+if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi
+set show-all-if-ambiguous on
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-fi
-
-# Setup my env.
-export PATH=`~/.paths`
-export SYDNEY=1
-export MERLIN_ROOT='/home/konstantin/Workspace/ironruby/ironruby/Merlin/Main/'
-export RUBYLIB=`ruby -e 'print Dir["/home/konstantin/Workspace/ruby/deps/*/lib"].join ":"'`
-export RUBYOPT=rubygems
-
-# Some more completion
-. ~/Workspace/ruby/completion-ruby/completion-ruby-all
-
-# My ssh keys.
-keychain -Q -q id_rsa id_dsa
+# Clean up.
+unset ps1_user ps1_host ps1_vcs default_user
