@@ -6,6 +6,7 @@ if [ -f /etc/bashrc ]; then . /etc/bashrc; fi
 
 # General Settings
 export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:.:./bin"
+export PWD_LENGTH=30
 
 # Bash History
 export HISTCONTROL=ignoreboth
@@ -64,17 +65,30 @@ parse_svn_repository_root() {
 
 ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")$(parse_svn_branch)\[\033[00m\]'
 
+# Ruby version in prompt if Rakefile exists.
 show_ruby_version() {
   if [ -f "Rakefile" ]; then echo -n "$RUBY_VERSION "; fi
 }
 
 ps1_ruby='\[\033[01;30m\]$(show_ruby_version)\[\033[00m\]'
 
+# Short PWD, if it's to long.
+short_pwd() {
+  FIXED_PWD=$(echo $PWD | sed "s:^$HOME:~:g")
+  if [ ${#FIXED_PWD} -gt $(($PWD_LENGTH)) ]; then
+    echo "${FIXED_PWD:0:$((4))}...${FIXED_PWD:$((${#PWD}-$PWD_LENGTH+7)):$(($PWD_LENGTH-7))}"
+  else
+    echo "$FIXED_PWD"
+  fi
+}
+
+ps1_pwd='\[\033[00;32m\]$(short_pwd)\[\033[00m\]'
+
 # Building $PS1.
 if [ -n "$ps1_user" ] && [ -n "$ps1_host" ]; then ps1_user="$ps1_user@"; fi
 PS1="$ps1_user$ps1_host"
 if [ "$PS1" != "" ]; then PS1="$PS1\[\033[00m\]:"; fi
-export PS1="$PS1\[\033[01;34m\]\w\[\033[00m\]$ps1_vcs $ps1_ruby\[\033[01m\]→\[\033[00m\] "
+export PS1="$PS1$ps1_pwd$ps1_vcs $ps1_ruby\[\033[01m\]→\[\033[00m\] "
 
 # Make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
@@ -85,7 +99,7 @@ case "$TERM" in
   *) ;;
 esac
 
-# enable color support of ls and also add handy aliases
+# Enable color support of ls and also add handy aliases.
 if [ -x /usr/bin/dircolors ]; then
     eval "`dircolors -b`"
     alias ls='ls --color=auto'
@@ -96,7 +110,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more aliases
+# Some more aliases.
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
