@@ -66,7 +66,9 @@ case `uname` in
 		export SVN_EDITOR="mate -wl1"
 		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
 		;;
-  Linux) ;;
+  Linux)
+		alias sudo="sudo -E"
+		;;
   SunOS)
     stty istrip
     export PATH=$PATH:/etc
@@ -76,9 +78,7 @@ esac
 
 # Don't show user name if it's me. make root red.
 case `whoami` in
-  konstantin|khaase|konstantin.haase|rkh)
-		alias sudo="sudo -E"
-		;;
+  konstantin|khaase|konstantin.haase|rkh) ;;
   root)
 		ps1_user="\[\033[01;31m\]\u"
 		echo "root will be logged out after 10 minutes without input or job"
