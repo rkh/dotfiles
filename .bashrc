@@ -64,6 +64,7 @@ case `uname` in
 		fi
 		export EDITOR="mate -wl1"
 		export SVN_EDITOR="mate -wl1"
+		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
 		;;
   Linux) ;;
   SunOS)
@@ -87,15 +88,9 @@ case `whoami` in
 esac
 
 # VCS in prompt.
-parse_svn_branch() {
-  parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'
-}
-parse_svn_url() {
-  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
-}
-parse_svn_repository_root() {
-  LANG=C svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
-}
+parse_svn_branch() { parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'; }
+parse_svn_url() { svn info 2>/dev/null | sed -ne 's#^URL: ##p'; }
+parse_svn_repository_root() { LANG=C svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'; }
 
 ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")$(parse_svn_branch)\[\033[00m\]'
 
