@@ -68,7 +68,7 @@ show_ruby_version() {
   if [ -f "Rakefile" ]; then echo -n "$RUBY_VERSION "; fi
 }
 
-ps1_ruby='\[\033[01;31m\]$(show_ruby_version)\[\033[00m\]'
+ps1_ruby='\[\033[01;30m\]$(show_ruby_version)\[\033[00m\]'
 
 # Building $PS1.
 if [ -n "$ps1_user" ] && [ -n "$ps1_host" ]; then ps1_user="$ps1_user@"; fi
@@ -95,6 +95,14 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+
+# some more aliases
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
+alias pdflatex='pdflatex -shell-escape'
+alias sudo='sudo -E'
+alias vi='vim'
 
 # Enable programmable completion features.
 if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi
