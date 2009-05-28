@@ -54,7 +54,8 @@ if [ ! -f ~/.gitconfig ]; then
 	git config --global color.diff auto
 	git config --global color.grep auto
 	git config --global color.interactive auto
-	git config --global color.interactive ui
+	git config --global color.interactive status
+	git config --global color.ui auto
 	git config --global help.autocorrect 1
 	if [ "Darwin" = $(uname) ]; then git config --global core.editor "mate -wl1"; fi
 	git config --global github.user "rkh"
