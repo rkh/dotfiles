@@ -84,7 +84,7 @@ esac
 
 # Don't show user name if it's me. make root red.
 case $USER in
-  konstantin|khaase|konstantin.haase|rkh) ;;
+  konstantin|khaase|konstantin.haase|rkh|hadoop02) ;;
   root)
 		ps1_user="\[\033[01;31m\]\u"
 		echo "root will be logged out after 10 minutes without input or job"
