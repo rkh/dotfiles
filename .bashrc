@@ -30,7 +30,7 @@ stty -ixon
 # SSH specific config.
 if [ -n "$SSH_CLIENT" ]; then
   # show host only if this is an ssh session
-  ps1_host="\h"
+  ps1_host="\[\033[01;32m\]\h"
 fi
 
 # Setting up hadoop.
