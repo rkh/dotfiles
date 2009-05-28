@@ -73,7 +73,6 @@ case `uname` in
 		alias ls='ls -G'
 		;;
   Linux)
-		alias sudo="sudo -E"
 		alias ls='ls --color=auto'
 		;;
   SunOS)
