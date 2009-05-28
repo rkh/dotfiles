@@ -37,7 +37,7 @@ fi
 if [ `which hadoop-config.sh 2>/dev/null` ]; then
   . `which hadoop-config.sh`
   if [ `which jaql 2>/dev/null` ]; then
-    export JAQL_HOME=$(dirname $(dirname $(which jaql)))
+    export JAQL_HOME=$(dirname "$(dirname "$(which jaql)")")
   fi
 fi
 
