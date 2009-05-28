@@ -5,13 +5,18 @@
 if [ -f /etc/bashrc ]; then . /etc/bashrc; fi  
 
 # General Settings
-export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:.:./bin"
+export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:.:./bin"
 export PWD_LENGTH=30
+shopt -s dotglob
+shopt -s cdspell
+shopt -s checkwinsize
+set -o ignoreeof
+set -o noclobber
 
 # Bash History
+export HISTIGNORE="&:ls:ll:la:l.:pwd:exit:clear"
 export HISTCONTROL=ignoreboth
 shopt -s histappend          
-shopt -s checkwinsize 
 
 # Ruby Settings
 export RUBY_VERSION=1.8.7
@@ -19,13 +24,16 @@ export RUBYOPT=rubygems
 export PATH=/opt/ruby/bin:$PATH
 export SYDNEY=1
 
-# ssh specific config
+# Disable XON/XOFF flow control (^s/^q).
+stty -ixon
+
+# SSH specific config.
 if [ -n "$SSH_CLIENT" ]; then
   # show host only if this is an ssh session
   ps1_host="\h"
 fi
 
-# Setting up hadoop
+# Setting up hadoop.
 if [ `which hadoop-config.sh 2>/dev/null` ]; then
   . `which hadoop-config.sh`
   if [ `which jaql 2>/dev/null` ]; then
@@ -33,10 +41,43 @@ if [ `which hadoop-config.sh 2>/dev/null` ]; then
   fi
 fi
 
+# Setting up git.
+if [ ! -f ~/.gitconfig ]; then
+	git config --global alias.b branch
+	git config --global alias.c clone
+	git config --global alias.ci commit
+	git config --global alias.co checkout
+	git config --global alias.st status
+	git config --global user.name "Konstantin Haase"
+	git config --global user.email "konstantin.mailinglists@googlemail.com"
+	git config --global color.branch auto
+	git config --global color.diff auto
+	git config --global color.grep auto
+	git config --global color.interactive auto
+	git config --global color.interactive ui
+	git config --global help.autocorrect 1
+	if [ "Darwin" = $(uname) ]; then git config --global core.editor "mate -wl1"; fi
+	git config --global github.user "rkh"
+	echo "please add your github token to ~/.gitconf"
+fi
+
 # OS specific config.
 case `uname` in
-  Darwin) ;;
-  Linux) ;;
+  Darwin)
+		if [ -f ~/.git_completion ]; then
+	  	. ~/.git_completion
+			else
+	  	echo "~/.git_completion is missing, expect trouble!"
+		fi
+		export EDITOR="mate -wl1"
+		export SVN_EDITOR="mate -wl1"
+		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
+		alias ls='ls -G'
+		;;
+  Linux)
+		alias sudo="sudo -E"
+		alias ls='ls --color=auto'
+		;;
   SunOS)
     stty istrip
     export PATH=$PATH:/etc
@@ -45,22 +86,20 @@ case `uname` in
 esac
 
 # Don't show user name if it's me. make root red.
-case `whoami` in
+case $USER in
   konstantin|khaase|konstantin.haase|rkh) ;;
-  root) ps1_user="\[\033[01;31m\]\u" ;;
+  root)
+		ps1_user="\[\033[01;31m\]\u"
+		echo "root will be logged out after 10 minutes without input or job"
+		export TMOUT=600
+		;;
   *) ps1_user="\[\033[01;32m\]\u" ;;
 esac
 
 # VCS in prompt.
-parse_svn_branch() {
-  parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'
-}
-parse_svn_url() {
-  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
-}
-parse_svn_repository_root() {
-  LANG=C svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
-}
+parse_svn_branch() { parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'; }
+parse_svn_url() { svn info 2>/dev/null | sed -ne 's#^URL: ##p'; }
+parse_svn_repository_root() { LANG=C svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'; }
 
 ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")$(parse_svn_branch)\[\033[00m\]'
 
@@ -98,23 +137,17 @@ case "$TERM" in
   *) ;;
 esac
 
-# Enable color support of ls and also add handy aliases.
-if [ -x /usr/bin/dircolors ]; then
-    eval "`dircolors -b`"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+# Enable color support. Don't add ls here, it behaves different on Darwin/BSD.
+if [ -x /usr/bin/dircolors ]; then eval "`dircolors -b`"; fi
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # Some more aliases.
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
 alias pdflatex='pdflatex -shell-escape'
-alias sudo='sudo -E'
 alias vi='vim'
 
 # Enable programmable completion features.
