@@ -87,7 +87,7 @@ case `uname` in
 esac
 
 # Don't show user name if it's me. make root red.
-case `whoami` in
+case $USER in
   konstantin|khaase|konstantin.haase|rkh) ;;
   root)
 		ps1_user="\[\033[01;31m\]\u"
