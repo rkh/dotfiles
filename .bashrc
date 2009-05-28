@@ -5,7 +5,7 @@
 if [ -f /etc/bashrc ]; then . /etc/bashrc; fi  
 
 # General Settings
-export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:.:./bin"
+export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:.:./bin"
 export PWD_LENGTH=30
 shopt -s dotglob
 shopt -s cdspell
