@@ -16,7 +16,6 @@ shopt -s checkwinsize
 # Ruby Settings
 export RUBY_VERSION=1.8.7
 export RUBYOPT=rubygems
-export GEM_GLOBAL="install|cleanup|generate_index|pristine|rdoc|update"
 export PATH=/opt/ruby/bin:$PATH
 export SYDNEY=1
 
