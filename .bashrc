@@ -61,14 +61,11 @@ if [ ! -f ~/.gitconfig ]; then
 	echo "please add your github token to ~/.gitconf"
 fi
 
+ . ~/.git_completion
+
 # OS specific config.
 case `uname` in
   Darwin)
-		if [ -f ~/.git_completion ]; then
-	  	. ~/.git_completion
-			else
-	  	echo "~/.git_completion is missing, expect trouble!"
-		fi
 		export EDITOR="mate -wl1"
 		export SVN_EDITOR="mate -wl1"
 		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
