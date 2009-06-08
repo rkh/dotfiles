@@ -33,14 +33,6 @@ if [ -n "$SSH_CLIENT" ]; then
   ps1_host="\[\033[01;32m\]\h"
 fi
 
-# Setting up hadoop.
-if [ `which hadoop-config.sh 2>/dev/null` ]; then
-  . `which hadoop-config.sh`
-  if [ `which jaql 2>/dev/null` ]; then
-    export JAQL_HOME=$(dirname "$(dirname "$(which jaql)")")
-  fi
-fi
-
 # Setting up git.
 if [ ! -f ~/.gitconfig ]; then
 	git config --global alias.b branch
@@ -67,6 +59,7 @@ fi
 # OS specific config.
 case `uname` in
   Darwin)
+		export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
 		export EDITOR="mate -wl1"
 		export SVN_EDITOR="mate -wl1"
 		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
@@ -81,6 +74,15 @@ case `uname` in
     ;;
   *) echo "OS unknown to bashrc." ;;
 esac
+
+# Setting up hadoop.
+export PATH=$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH
+if [ `which hadoop-config.sh 2>/dev/null` ]; then
+  . `which hadoop-config.sh`
+  if [ `which jaql 2>/dev/null` ]; then
+    export JAQL_HOME=$(dirname "$(dirname "$(which jaql)")")
+  fi
+fi
 
 # Don't show user name if it's me. make root red.
 case $USER in
