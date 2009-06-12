@@ -21,7 +21,8 @@ shopt -s histappend
 # Ruby Settings
 export RUBY_VERSION=1.8.7
 export RUBYOPT=rubygems
-export PATH=/opt/ruby/bin:$PATH
+export RUBY_PATH=/opt/ruby
+export PATH=$RUBY_PATH/bin:$PATH
 export SYDNEY=1
 
 # Disable XON/XOFF flow control (^s/^q).
@@ -149,9 +150,18 @@ alias l='ls -CF'
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 
+# shorthand
+ruby_version() {
+	if [ -z $1 ]; then
+		echo $RUBY_VERSION
+	else
+		RUBY_VERSION=$1
+	fi
+}
+
 # Enable programmable completion features.
 if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi
 set show-all-if-ambiguous on
 
 # Clean up.
-unset ps1_user ps1_host ps1_vcs default_user
+unset ps1_user ps1_host ps1_vcs ps_ruby ps1_pwd
