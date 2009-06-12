@@ -150,17 +150,21 @@ alias l='ls -CF'
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 
-# shorthand
-ruby_version() {
-	if [ -z $1 ]; then
-		echo $RUBY_VERSION
+# shorthands - i do this a lot
+ruby_version() { if [ -z $1 ]; then echo $RUBY_VERSION; else RUBY_VERSION=$1; fi; }
+
+# if cat is called on a directory, call ls instead
+cat() {
+	if [ $# = 1 ] && [ -d $1 ]; then
+		ls $1
 	else
-		RUBY_VERSION=$1
+		`which cat` "$@"
 	fi
 }
 
 # Enable programmable completion features.
 if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi
+if [ -f ~/.tabtab.bash ]; then . ~/.tabtab.bash; fi
 set show-all-if-ambiguous on
 
 # Clean up.
