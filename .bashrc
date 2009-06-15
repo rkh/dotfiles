@@ -97,16 +97,13 @@ case $USER in
 esac
 
 # VCS in prompt.
-parse_svn_branch() {
-  # FIXME
-  if [ `uname` != SunOS ]; then
-    parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'
-  fi
-}
+parse_svn_branch() { parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'; }
 parse_svn_url() { svn info 2>/dev/null | sed -ne 's#^URL: ##p'; }
 parse_svn_repository_root() { LANG=C svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'; }
 
-ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")$(parse_svn_branch)\[\033[00m\]'
+# FIXME LATER
+#ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")$(parse_svn_branch)\[\033[00m\]'
+ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")\[\033[00m\]'
 
 # Ruby version in prompt if Rakefile exists.
 show_ruby_version() {
