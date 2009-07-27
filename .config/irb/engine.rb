@@ -14,6 +14,7 @@ module MyIRB
       ::RUBY_ENGINE = "ruby"
     end
   end
+  
   unless RUBY_ENGINE.frozen?
     RUBY_ENGINE.replace "rbx" if RUBY_ENGINE == "rubinius"
     RUBY_ENGINE.downcase!

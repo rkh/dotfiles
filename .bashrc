@@ -19,7 +19,7 @@ export HISTCONTROL=ignoreboth
 shopt -s histappend          
 
 # Ruby Settings
-export RUBY_VERSION=1.9.1
+export RUBY_VERSION=1.8.7
 export RUBYOPT=rubygems
 export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
@@ -77,7 +77,7 @@ case `uname` in
 esac
 
 # Setting up hadoop.
-export PATH=$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH
+export PATH=$HOME/Workspace/jaql/bin:$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH
 if [ `which hadoop-config.sh 2>/dev/null` ]; then
   . `which hadoop-config.sh`
   if [ `which jaql 2>/dev/null` ]; then
