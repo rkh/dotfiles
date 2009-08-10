@@ -2,9 +2,24 @@
 [ -z "$PS1" ] && return
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then . /etc/bashrc; fi  
+if [ -f /etc/bashrc ]; then . /etc/bashrc; fi
+  
+# Function to resolve soft links
+function delink()
+{ 
+  f=$1
+  while [ -h "$f" ]; do 
+    ls=`ls -ld "$f"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then f="$link"
+    else f=`dirname "$f"`/"$link"
+    fi
+  done
+  echo $f
+}  
 
 # General Settings
+export DOTFILES=$(dirname `delink ~/.bashrc` )
 export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:.:./bin"
 export PWD_LENGTH=30
 shopt -s dotglob
@@ -24,6 +39,11 @@ export RUBYOPT=rubygems
 export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
 export SYDNEY=1
+
+# Fix Ruby version
+if [ !`which install_ruby 2>/dev/null` ] && [ `which ruby 2>/dev/null` ]; then
+  export RUBY_VERSION=$(ruby --version | sed -e "s/^ruby \(.\..\..\).*$/\1/")
+fi
 
 # Disable XON/XOFF flow control (^s/^q).
 stty -ixon
@@ -55,7 +75,7 @@ if [ ! -f ~/.gitconfig ]; then
 	echo "please add your github token to ~/.gitconf"
 fi
 
- . ~/.git_completion
+ . $DOTFILES/.git_completion
 
 # OS specific config.
 case `uname` in
@@ -79,7 +99,7 @@ esac
 # Setting up hadoop.
 export PATH=$HOME/Workspace/jaql/bin:$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH:/home/hadoop/hadoop/bin/
 if [ `which hadoop-config.sh 2>/dev/null` ]; then
-  `which hadoop-config.sh`
+  . $DOTFILES/hadoop-config-fixed.sh
   if [ `which jaql 2>/dev/null` ]; then
     export JAQL_HOME=$(dirname "$(dirname "$(which jaql)")")
   fi
@@ -91,6 +111,7 @@ case $HOSTNAME in
     export JAVA_HOME=/home/hadoop/java
     export HADOOPSITEPATH=$(dirname `which hadoop`)/../conf/hadoop-site.xml
     export PIGDIR=$HOME/pig
+    export PIG_HOME=$PIGDIR
     ps1_host="\[\033[01;32m\]hadoop"
     ;;
   *) echo "Host unknown to bashrc." ;;
@@ -118,7 +139,9 @@ ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")\[\033[00m\]'
 
 # Ruby version in prompt if Rakefile exists.
 show_ruby_version() {
-  if [ -f "Rakefile" ]; then echo -n "$RUBY_VERSION "; fi
+  if [ -f "Rakefile" ] && [ `which ruby 2>/dev/null` ]; then
+    echo -n "$RUBY_VERSION "
+  fi
 }
 
 ps1_ruby='\[\033[01;30m\]$(show_ruby_version)\[\033[00m\]'
