@@ -83,7 +83,8 @@ case $HOSTNAME in
     export HADOOPSITEPATH=$(dirname `which hadoop`)/../conf/hadoop-site.xml
     export PIGDIR=$HOME/pig
     ps1_host="\[\033[01;32m\]hadoop"
-  *) echo "Host unknown to bashrc."
+    ;;
+  *) echo "Host unknown to bashrc." ;;
 esac
 
 # Don't show user name if it's me. make root red.
