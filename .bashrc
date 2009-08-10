@@ -74,7 +74,16 @@ case `uname` in
     export PATH=/opt/csw/bin:/opt/sfw/bin:$PATH:/etc
     ;;
   *) echo "OS unknown to bashrc." ;;
-esac
+esac 
+
+# Setting up hadoop.
+export PATH=$HOME/Workspace/jaql/bin:$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH:/home/hadoop/hadoop/bin/
+if [ `which hadoop-config.sh 2>/dev/null` ]; then
+  . `which hadoop-config.sh` 2>/dev/null
+  if [ `which jaql 2>/dev/null` ]; then
+    export JAQL_HOME=$(dirname "$(dirname "$(which jaql)")")
+  fi
+fi
 
 # host dependen config
 case $HOSTNAME in
@@ -97,15 +106,6 @@ case $USER in
 		;;
   *) ps1_user="\[\033[01;32m\]\u" ;;
 esac
-
-# Setting up hadoop.
-export PATH=$HOME/Workspace/jaql/bin:$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH:/home/hadoop/hadoop/bin/
-if [ `which hadoop-config.sh 2>/dev/null` ]; then
-  . `which hadoop-config.sh` 2>/dev/null
-  if [ `which jaql 2>/dev/null` ]; then
-    export JAQL_HOME=$(dirname "$(dirname "$(which jaql)")")
-  fi
-fi
 
 # VCS in prompt.
 parse_svn_branch() { parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print " (svn: "$1 "/" $2 ")"}'; }
