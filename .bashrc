@@ -80,7 +80,7 @@ esac
 export PATH=$HOME/Workspace/jaql/bin:$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH:/home/hadoop/hadoop/bin/
 if [ `which hadoop-config.sh 2>/dev/null` ]; then
   . `which hadoop-config.sh`
-  $(dirname $(which hadoop))
+  export HADOOPSITEPATH=$(dirname `which hadoop`)/../conf/hadoop-site.xml
   export PIGDIR=$HOME/pig
   if [ `which jaql 2>/dev/null` ]; then
     export JAQL_HOME=$(dirname "$(dirname "$(which jaql)")")
