@@ -107,7 +107,7 @@ fi
 
 # host dependen config
 case $HOSTNAME in
-  hadoop09ws02.hpi.uni-potsdam.de)
+  hadoop09ws02.hpi.uni-potsdam.de|hadoop09ws10.hpi.uni-potsdam.de)
     export JAVA_HOME=/home/hadoop/java
     export PIG_CLASSPATH=/home/hadoop/hadoop/conf/:/home/hadoop02/pig/pig.jar
     export HADOOPSITEPATH=$(dirname `which hadoop`)/../conf/hadoop-site.xml
