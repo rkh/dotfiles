@@ -85,6 +85,9 @@ case `uname` in
 		export SVN_EDITOR="mate -wl1"
 		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
 		alias ls='ls -G'
+		for p in /usr/local/*/bin /usr/*/bin; do
+		  export PATH=$p:$PATH
+	  done
 		;;
   Linux)
 		alias ls='ls --color=auto'
@@ -186,6 +189,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
+alias screen='screen -U'
 
 # shorthands - i do this a lot
 ruby_version() { if [ -z $1 ]; then echo $RUBY_VERSION; else RUBY_VERSION=$1; fi; }
