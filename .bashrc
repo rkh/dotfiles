@@ -190,7 +190,18 @@ alias l='ls -CF'
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 alias screen='screen -U'
-alias et='$EDITOR $(ls -A)'
+
+#alias et='$EDITOR $(ls -A)'
+function et() {
+  cmd="mate"
+  for file in $(ls -A); do
+    case $file in
+      .git|.svn|.DS_Store|*~) ;;
+      *) cmd=$cmd" "$file
+    esac
+  done
+  $cmd
+}
 
 # shorthands - i do this a lot
 ruby_version() { if [ -z $1 ]; then echo $RUBY_VERSION; else RUBY_VERSION=$1; fi; }
