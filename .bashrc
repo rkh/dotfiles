@@ -196,7 +196,7 @@ function et() {
   cmd="mate"
   for file in $(ls -A); do
     case $file in
-      .git|.svn|.DS_Store|*~) ;;
+      .git|.svn|.DS_Store|*~|vendor|log) ;;
       *) cmd=$cmd" "$file
     esac
   done
