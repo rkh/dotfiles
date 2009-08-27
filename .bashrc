@@ -193,8 +193,8 @@ alias screen='screen -U'
 
 #alias et='$EDITOR $(ls -A)'
 function et() {
-  cmd="mate"
-  for file in $(ls -A); do
+  cmd=$EDITOR
+  for file in $(ls -A $@); do
     case $file in
       .git|.svn|.DS_Store|*~|vendor|log) ;;
       *) cmd=$cmd" "$file
