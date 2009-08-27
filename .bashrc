@@ -34,7 +34,7 @@ export HISTCONTROL=ignoreboth
 shopt -s histappend          
 
 # Ruby Settings
-export RUBY_VERSION=1.8.7
+export RUBY_VERSION=1.9.1
 export RUBYOPT=rubygems
 export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
@@ -190,6 +190,7 @@ alias l='ls -CF'
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 alias screen='screen -U'
+alias et='$EDITOR $(ls -A)'
 
 # shorthands - i do this a lot
 ruby_version() { if [ -z $1 ]; then echo $RUBY_VERSION; else RUBY_VERSION=$1; fi; }
@@ -209,4 +210,4 @@ if [ -f ~/.tabtab.bash ]; then . ~/.tabtab.bash; fi
 set show-all-if-ambiguous on
 
 # Clean up.
-unset ps1_user ps1_host ps1_vcs ps_ruby ps1_pwd
+unset ps1_user ps1_host ps1_vcs ps_ruby ps1_pwd ps1_ruby script this
