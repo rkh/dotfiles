@@ -70,6 +70,7 @@ if [ ! -f ~/.gitconfig ]; then
 	git config --global color.interactive status
 	git config --global color.ui auto
 	git config --global help.autocorrect 1
+	git config --global push.default matching
 	if [ "Darwin" = $(uname) ]; then git config --global core.editor "mate -wl1"; fi
 	git config --global github.user "rkh"
 	echo "please add your github token to ~/.gitconf"
@@ -81,7 +82,7 @@ fi
 case `uname` in
   Darwin)
 		export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
-		export EDITOR="mate -wl1"
+		export EDITOR="mate"
 		export SVN_EDITOR="mate -wl1"
 		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
 		alias ls='ls -G'
