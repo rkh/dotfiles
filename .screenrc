@@ -1,0 +1,3 @@
+# use ssh-agent
+setenv SSH_AUTH_SOCK $HOME/.screen-ssh-agent
+screen 10 ssh-agent -a $SSH_AUTH_SOCK $SHELL
