@@ -195,11 +195,18 @@ alias screen='screen -U'
 #alias et='$EDITOR $(ls -A)'
 function et() {
   cmd=$EDITOR
-  for file in $@/*; do
-    case $(basename $file) in
-      .git|.svn|.DS_Store|*~|vendor|log|*cache*) ;;
-      *) cmd=$cmd" "$file
-    esac
+  if [ $# = 0 ]; then
+    paths="."
+  else
+    paths=$@
+  fi
+  for path in $paths; do
+    for file in $path/*; do
+      case $(basename $file) in
+        .git|.svn|.DS_Store|*~|vendor|log|*cache*) ;;
+        *) cmd=$cmd" "$file
+      esac
+    done
   done
   $cmd
 }
