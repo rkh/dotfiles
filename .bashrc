@@ -224,6 +224,23 @@ cat() {
 	fi
 }
 
+# cd to project
+c() {
+  for dir in $HOME/Workspace/$1 $HOME/Repositories/$1 $HOME/Repositories/*-$1 $HOME/$1 $1 $RUBY_PATH/1.*/lib/ruby/gems/*/gems/$1-*; do
+    if [ -d $dir ]; then
+      target=$dir
+      break
+    fi
+  done
+  if [ $target ]; then
+    echo $target
+    cd $target
+    unset target
+  else
+    echo "unknown project"
+  fi
+}
+
 # Enable programmable completion features.
 if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi
 if [ -f ~/.tabtab.bash ]; then . ~/.tabtab.bash; fi
