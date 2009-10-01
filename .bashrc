@@ -61,6 +61,7 @@ if [ ! -f ~/.gitconfig ]; then
 	git config --global alias.ci commit
 	git config --global alias.co checkout
 	git config --global alias.st status
+	git config --global alias.chp cherry-pick
 	git config --global user.name "Konstantin Haase"
 	git config --global user.email "konstantin.mailinglists@googlemail.com"
 	git config --global color.branch auto
