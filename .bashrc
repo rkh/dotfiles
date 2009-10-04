@@ -3,12 +3,12 @@
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then . /etc/bashrc; fi
-  
+
 # Function to resolve soft links
 function delink()
-{ 
+{
   f=$1
-  while [ -h "$f" ]; do 
+  while [ -h "$f" ]; do
     ls=`ls -ld "$f"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
     if expr "$link" : '/.*' > /dev/null; then f="$link"
@@ -16,7 +16,7 @@ function delink()
     fi
   done
   echo $f
-}  
+}
 
 # General Settings
 export DOTFILES=$(dirname `delink ~/.bashrc` )
@@ -31,7 +31,7 @@ set -o noclobber
 # Bash History
 export HISTIGNORE="&:ls:ll:la:l.:pwd:exit:clear"
 export HISTCONTROL=ignoreboth
-shopt -s histappend          
+shopt -s histappend
 
 # Ruby Settings
 export RUBY_VERSION=1.9.1
@@ -56,25 +56,25 @@ fi
 
 # Setting up git.
 if [ ! -f ~/.gitconfig ]; then
-	git config --global alias.b branch
-	git config --global alias.c clone
-	git config --global alias.ci commit
-	git config --global alias.co checkout
-	git config --global alias.st status
-	git config --global alias.chp cherry-pick
-	git config --global user.name "Konstantin Haase"
-	git config --global user.email "konstantin.mailinglists@googlemail.com"
-	git config --global color.branch auto
-	git config --global color.diff auto
-	git config --global color.grep auto
-	git config --global color.interactive auto
-	git config --global color.interactive status
-	git config --global color.ui auto
-	git config --global help.autocorrect 1
-	git config --global push.default matching
-	if [ "Darwin" = $(uname) ]; then git config --global core.editor "mate -wl1"; fi
-	git config --global github.user "rkh"
-	echo "please add your github token to ~/.gitconf"
+  git config --global alias.b branch
+  git config --global alias.c clone
+  git config --global alias.ci commit
+  git config --global alias.co checkout
+  git config --global alias.st status
+  git config --global alias.chp cherry-pick
+  git config --global user.name "Konstantin Haase"
+  git config --global user.email "konstantin.mailinglists@googlemail.com"
+  git config --global color.branch auto
+  git config --global color.diff auto
+  git config --global color.grep auto
+  git config --global color.interactive auto
+  git config --global color.interactive status
+  git config --global color.ui auto
+  git config --global help.autocorrect 1
+  git config --global push.default matching
+  if [ "Darwin" = $(uname) ]; then git config --global core.editor "mate -wl1"; fi
+  git config --global github.user "rkh"
+  echo "please add your github token to ~/.gitconf"
 fi
 
  . $DOTFILES/.git_completion
@@ -82,26 +82,26 @@ fi
 # OS specific config.
 case `uname` in
   Darwin)
-		export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
-		export EDITOR="mate"
-		export SVN_EDITOR="mate -wl1"
-		function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
-		alias ls='ls -G'
-		for p in /usr/local/*/bin /usr/*/bin; do
-		  export PATH=$p:$PATH
-	  done
-	  unset p
-	  gitx() { open -a GitX $@; }
-		;;
+    export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
+    export EDITOR="mate"
+    export SVN_EDITOR="mate -wl1"
+    function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
+    alias ls='ls -G'
+    for p in /usr/local/*/bin /usr/*/bin; do
+      export PATH=$p:$PATH
+    done
+    unset p
+    gitx() { open -a GitX $@; }
+    ;;
   Linux)
-		alias ls='ls --color=auto'
-		;;
+    alias ls='ls --color=auto'
+    ;;
   SunOS)
     stty istrip
     export PATH=/opt/csw/bin:/opt/sfw/bin:$PATH:/etc
     ;;
   *) echo "OS unknown to bashrc." ;;
-esac 
+esac
 
 # Setting up hadoop.
 export PATH=$HOME/Workspace/jaql/bin:$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH:/home/hadoop/hadoop/bin/
@@ -130,10 +130,10 @@ esac
 case $USER in
   konstantin|khaase|konstantin.haase|rkh|hadoop02) ;;
   root)
-		ps1_user="\[\033[01;31m\]\u"
-		echo "root will be logged out after 10 minutes without input or job"
-		export TMOUT=600
-		;;
+    ps1_user="\[\033[01;31m\]\u"
+    echo "root will be logged out after 10 minutes without input or job"
+    export TMOUT=600
+    ;;
   *) ps1_user="\[\033[01;32m\]\u" ;;
 esac
 
@@ -220,11 +220,11 @@ ruby_version() { if [ -z $1 ]; then echo $RUBY_VERSION; else RUBY_VERSION=$1; fi
 
 # if cat is called on a directory, call ls instead
 cat() {
-	if [ $# = 1 ] && [ -d $1 ]; then
-		ls $1
-	else
-		`which cat` "$@"
-	fi
+  if [ $# = 1 ] && [ -d $1 ]; then
+    ls $1
+  else
+    `which cat` "$@"
+  fi
 }
 
 # cd to project
