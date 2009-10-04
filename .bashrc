@@ -90,6 +90,7 @@ case `uname` in
 		for p in /usr/local/*/bin /usr/*/bin; do
 		  export PATH=$p:$PATH
 	  done
+	  unset p
 	  gitx() { open -a GitX $@; }
 		;;
   Linux)
@@ -237,10 +238,10 @@ c() {
   if [ $target ]; then
     echo $target
     cd $target
-    unset target
   else
     echo "unknown project"
   fi
+  unset dir target
 }
 
 # Enable programmable completion features.
@@ -249,4 +250,4 @@ if [ -f ~/.tabtab.bash ]; then . ~/.tabtab.bash; fi
 set show-all-if-ambiguous on
 
 # Clean up.
-unset ps1_user ps1_host ps1_vcs ps_ruby ps1_pwd ps1_ruby script this
+unset ps1_user ps1_host ps1_vcs ps_ruby ps1_pwd ps1_ruby script this dir bin
