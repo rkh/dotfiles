@@ -72,7 +72,6 @@ if [ ! -f ~/.gitconfig ]; then
   git config --global color.ui auto
   git config --global help.autocorrect 1
   git config --global push.default matching
-  if [ "Darwin" = $(uname) ]; then git config --global core.editor "mate -wl1"; fi
   git config --global github.user "rkh"
   echo "please add your github token to ~/.gitconf"
 fi
@@ -83,8 +82,10 @@ fi
 case `uname` in
   Darwin)
     export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
-    export EDITOR="mate"
-    export SVN_EDITOR="mate -wl1"
+    if [ $(which mate) ]; then
+      export EDITOR="mate"
+      export SVN_EDITOR="mate -wl1"
+    fi
     function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
     alias ls='ls -G'
     for p in /usr/local/*/bin /usr/*/bin; do
@@ -102,6 +103,11 @@ case `uname` in
     ;;
   *) echo "OS unknown to bashrc." ;;
 esac
+
+# setting up editor
+[ -z "$EDITOR" ] && EDITOR="vim"
+[ -z "$SVN_EDITOR" ] && SVN_EDITOR="$EDITOR"
+git config --global --replace-all core.editor "$SVN_EDITOR"
 
 # Setting up hadoop.
 export PATH=$HOME/Workspace/jaql/bin:$HOME/Repositories/hadoop-0.18.3/bin:$HOME/Repositories/jaql-0.4/bin:$PATH:/home/hadoop/hadoop/bin/
