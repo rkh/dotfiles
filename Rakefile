@@ -1,22 +1,28 @@
+task :default => :install
+
 desc "installs everything"
 task :install => "install:all"
+
 namespace :install do
 
   def install name, *files
     desc "installs #{name} configuration"
     task(name) do
-      Dir[*files].collect do |file|
-        full = File.join Dir.pwd, file
-        Dir.chdir ENV["HOME"] do
-          mkdir_p File.dirname(file) 
-          sh "ln -sTf #{full} #{file}"
-        end
+      puts "\033[1;32minstalling #{name} configuration\033[0m"
+      Dir.glob files do |file|
+        source = File.expand_path file
+        target = File.join ENV["HOME"], file
+        print "  \033[0;32m>>\033[0m "
+        mkdir_p File.dirname(target)
+        print "  \033[0;32m>>\033[0m "
+        ln_sf source, target
       end
     end
     task :all => name
   end
 
-  install :irb, ".irbrc", ".config/irb/*.rb"
-  install :vim, ".vimrc", ".vim"
+  install :irb, "{.irbrc,.config/irb/*.rb}"
+  install :vim, ".vim*"
+  install :bash, "{.bash*,.git_completion}"
 
 end
