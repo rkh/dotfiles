@@ -90,6 +90,7 @@ case `uname` in
 		for p in /usr/local/*/bin /usr/*/bin; do
 		  export PATH=$p:$PATH
 	  done
+	  gitx() { open -a GitX $@; }
 		;;
   Linux)
 		alias ls='ls --color=auto'
@@ -226,7 +227,7 @@ cat() {
 
 # cd to project
 c() {
-  for dir in $HOME/Workspace/$1 $HOME/Repositories/$1 $HOME/Repositories/*-$1 $HOME/$1 $1 $RUBY_PATH/1.*/lib/ruby/gems/*/gems/$1-*; do
+  for dir in $HOME/Workspace/$1 $HOME/Repositories/$1 $HOME/Repositories/*-$1 $HOME/$1 $1 $RUBY_PATH/$RUBY_VERSION/lib/ruby/gems/*/gems/$1-*; do
     if [ -d $dir ]; then
       target=$dir
       break
