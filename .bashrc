@@ -122,6 +122,7 @@ case $HOSTNAME in
     export PIG_HOME=$PIGDIR
     ps1_host="\[\033[01;32m\]hadoop"
     ;;
+  localtoast) ;;
   *) echo "Host unknown to bashrc." ;;
 esac
 
@@ -133,7 +134,6 @@ case $USER in
 		echo "root will be logged out after 10 minutes without input or job"
 		export TMOUT=600
 		;;
-	localtoast) ;;
   *) ps1_user="\[\033[01;32m\]\u" ;;
 esac
 
