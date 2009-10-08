@@ -233,22 +233,34 @@ cat() {
   fi
 }
 
-# cd to project
-c() {
+# directory for project
+d() {
   for dir in $HOME/Workspace/$1 $HOME/Repositories/$1 $HOME/Repositories/*-$1 $HOME/$1 $1 $RUBY_PATH/$RUBY_VERSION/lib/ruby/gems/*/gems/$1-*; do
     if [ -d $dir ]; then
-      target=$dir
+      echo $dir
       break
     fi
   done
+  unset dir
+}
+
+# do stuff with project
+with_project() {
+  target=$(d $1)
   if [ $target ]; then
-    echo $target
-    cd $target
+    echo $2 $target
+    $2 $target
   else
     echo "unknown project"
   fi
-  unset dir target
+  unset target
 }
+
+# cd to project
+c() { with_project $1 cd; }
+
+# open project in editor
+e() { with_project $1 $EDITOR; }
 
 # Enable programmable completion features.
 if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi
