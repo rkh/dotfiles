@@ -95,6 +95,7 @@ case `uname` in
     gitx() { open -a GitX $@; }
     ;;
   Linux)
+    PATH=$PATH:/var/lib/gems/1.8/bin:/var/lib/gems/1.9/bin
     alias ls='ls --color=auto'
     ;;
   SunOS)
