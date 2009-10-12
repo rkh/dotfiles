@@ -13,9 +13,9 @@ namespace :install do
         source = File.expand_path file
         target = File.join ENV["HOME"], file
         print "  \033[0;32m>>\033[0m "
-        mkdir_p File.dirname(target)
+        FileUtils::Verbose.mkdir_p File.dirname(target)
         print "  \033[0;32m>>\033[0m "
-        ln_sf source, target
+        FileUtils::Verbose.ln_sf source, target
       end
     end
     task :all => name
