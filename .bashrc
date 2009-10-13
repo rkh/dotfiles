@@ -34,7 +34,7 @@ export HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # Ruby Settings
-export RUBY_VERSION=1.9.1
+export RUBY_VERSION=1.8.7
 export RUBYOPT=rubygems
 export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
