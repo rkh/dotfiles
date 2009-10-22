@@ -62,6 +62,7 @@ if [ ! -f ~/.gitconfig ]; then
   git config --global alias.co checkout
   git config --global alias.st status
   git config --global alias.chp cherry-pick
+  git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
   git config --global user.name "Konstantin Haase"
   git config --global user.email "konstantin.mailinglists@googlemail.com"
   git config --global color.branch auto
