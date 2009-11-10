@@ -22,16 +22,22 @@ function delink()
 export DOTFILES=$(dirname `delink ~/.bashrc` )
 export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:.:./bin"
 export PWD_LENGTH=30
-shopt -s dotglob
-shopt -s cdspell
-shopt -s checkwinsize
 set -o ignoreeof
 set -o noclobber
+set -o notify
+shopt -s cdspell >/dev/null 2>&1
+shopt -s checkwinsize >/dev/null 2>&1
+shopt -s dotglob >/dev/null 2>&1
+shopt -s extglob >/dev/null 2>&1
+shopt -s hostcomplete >/dev/null 2>&1
+shopt -s interactive_comments >/dev/null 2>&1
+shopt -u mailwarn >/dev/null 2>&1
+shopt -s no_empty_cmd_completion >/dev/null 2>&1
 
 # Bash History
 export HISTIGNORE="&:ls:ll:la:l.:pwd:exit:clear"
 export HISTCONTROL=ignoreboth
-shopt -s histappend
+shopt -s histappend >/dev/null 2>&1
 
 # Ruby Settings
 export RUBY_VERSION=1.9.1
@@ -200,6 +206,7 @@ alias egrep='egrep --color=auto'
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
+alias l.="ls -d .*"
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 alias screen='screen -U'
@@ -233,6 +240,16 @@ cat() {
   else
     `which cat` "$@"
   fi
+}
+
+# push SSH public key to another box
+push_ssh_cert() {
+  local _host
+  test -f ~/.ssh/id_dsa.pub || ssh-keygen -t dsa
+  for _host in "$@"; do
+    echo $_host
+    ssh $_host 'cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_dsa.pub
+  done
 }
 
 # directory for project
