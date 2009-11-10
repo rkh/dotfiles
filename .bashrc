@@ -252,6 +252,23 @@ push_ssh_cert() {
   done
 }
 
+# push dotfiles to remote host
+push_dotfiles() {
+  local _host
+  for _host in "$@"; do
+    echo $_host
+    ssh $_host '
+      if [ ! $(which git)]; then
+        for installer in apt-get yum port brew; do
+          if [ $(which $installer) ]; then break; fi
+        done
+        sudo $installer install git-core || exit
+      fi
+      git clone git://github.com/rkh/dotfiles.git $HOME/.dot
+      ln -sf $HOME/.dot/{.bash_profile,.bashrc,.git_completion,.screenrc} $HOME/'
+  done
+}
+
 # directory for project
 d() {
   for dir in $HOME/Workspace/$1 $HOME/Repositories/$1 $HOME/Repositories/*-$1 $HOME/$1 $1 $RUBY_PATH/$RUBY_VERSION/lib/ruby/gems/*/gems/$1-*; do
