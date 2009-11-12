@@ -46,6 +46,8 @@ export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
 export SYDNEY=1
 
+if [[ -s /opt/rvm/scripts/rvm ]] ; then source /opt/rvm/scripts/rvm ; fi
+
 # Fix Ruby version
 if [ !`which install_ruby 2>/dev/null` ] && [ `which ruby 2>/dev/null` ]; then
   export RUBY_VERSION=$(ruby --version | sed -e "s/^ruby \(.\..\..\).*$/\1/")

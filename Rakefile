@@ -23,6 +23,6 @@ namespace :install do
 
   install :irb, "{.irbrc,.config/irb/*.rb}"
   install :vim, ".vim*"
-  install :bash, "{.bash*,.git_completion}"
+  install :bash, "{.bash*,.git_completion,.rvmrc}"
 
 end
