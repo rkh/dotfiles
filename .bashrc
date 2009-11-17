@@ -41,7 +41,7 @@ shopt -s histappend >/dev/null 2>&1
 
 # Ruby Settings
 export RUBY_VERSION=1.9.1
-export RUBYOPT=rubygems
+#export RUBYOPT=rubygems
 export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
 export SYDNEY=1
@@ -102,6 +102,7 @@ case `uname` in
     done
     unset p
     gitx() { open -a GitX $@; }
+	PATH=$PATH:/usr/local/mysql/bin
     ;;
   Linux)
     PATH=$PATH:/var/lib/gems/1.8/bin:/var/lib/gems/1.9/bin
@@ -250,7 +251,7 @@ push_ssh_cert() {
   test -f ~/.ssh/id_dsa.pub || ssh-keygen -t dsa
   for _host in "$@"; do
     echo $_host
-    ssh $_host 'cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_dsa.pub
+    ssh $_host 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_dsa.pub
   done
 }
 
