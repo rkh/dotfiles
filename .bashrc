@@ -261,7 +261,7 @@ push_dotfiles() {
   for _host in "$@"; do
     echo $_host
     ssh $_host '
-      if [ ! $(which git)]; then
+      if [ ! $(which git) ]; then
         for installer in apt-get yum port brew; do
           if [ $(which $installer) ]; then break; fi
         done
