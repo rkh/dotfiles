@@ -41,10 +41,12 @@ shopt -s histappend >/dev/null 2>&1
 
 # Ruby Settings
 export RUBY_VERSION=1.9.1
-#export RUBYOPT=rubygems
+export RUBYOPT=rubygems
 export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
 export SYDNEY=1
+export MAGLEV_HOME=$HOME/Repositories/maglev
+export PATH=$MAGLEV_HOME/bin:$PATH
 
 if [[ -s /opt/rvm/scripts/rvm ]] ; then source /opt/rvm/scripts/rvm ; fi
 
