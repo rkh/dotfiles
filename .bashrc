@@ -20,7 +20,7 @@ function delink()
 
 # General Settings
 export DOTFILES=$(dirname `delink ~/.bashrc` )
-export PATH="$HOME/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:.:./bin"
+export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
 export PWD_LENGTH=30
 set -o ignoreeof
 set -o noclobber
@@ -215,6 +215,10 @@ alias l.="ls -d .*"
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 alias screen='screen -U'
+
+if which hub > /dev/null; then
+  alias git=hub
+fi
 
 #alias et='$EDITOR $(ls -A)'
 function et() {

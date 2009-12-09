@@ -14,3 +14,7 @@ export RIPDIR RUBYLIB PATH
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 # Finished adapting your PATH environment variable for use with MacPorts.
 
+
+# rvm-install added line:
+if [[ -s /Users/konstantin/.rvm/scripts/rvm ]] ; then source /Users/konstantin/.rvm/scripts/rvm ; fi
+
