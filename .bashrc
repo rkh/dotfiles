@@ -215,6 +215,11 @@ alias l.="ls -d .*"
 alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 alias screen='screen -U'
+alias use='rvm use'
+alias st='git st'
+alias sl='ls'
+alias gems='gem list | less'
+alias less='less -R'
 
 #if which hub > /dev/null; then
 #  alias git=hub
