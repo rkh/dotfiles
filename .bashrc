@@ -20,7 +20,7 @@ function delink()
 
 # General Settings
 export DOTFILES=$(dirname `delink ~/.bashrc` )
-export PATH="$HOME/bin:$HOME/.bin:/usr/local/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
+export PATH="$HOME/bin:$HOME/.bin:$HOME/.local/bin:/usr/local/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
 export PWD_LENGTH=30
 set -o ignoreeof
 set -o noclobber
