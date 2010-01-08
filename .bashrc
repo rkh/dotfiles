@@ -216,10 +216,19 @@ alias pdflatex='pdflatex -shell-escape'
 alias vi='vim'
 alias screen='screen -U'
 alias use='rvm use'
-alias st='git st'
-alias sl='ls'
 alias gems='gem list | less'
 alias less='less -R'
+alias gsvn='git svn'
+alias gdiff='git diff'
+alias st='git st'
+alias log='git lg'
+alias ciam='git ci -am'
+
+# common typos by me
+alias sl='ls'
+alias gti='git'
+alias lg='log'
+for cmd in st ci add b c chp lg clone clean; do alias git$cmd='git $cmd'; done
 
 #if which hub > /dev/null; then
 #  alias git=hub
