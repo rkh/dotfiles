@@ -64,8 +64,11 @@ if [ -n "$SSH_CLIENT" ]; then
   ps1_host="\[\033[01;32m\]\h"
 fi
 
+USER_NAME="Konstantin Haase"
+USER_EMAIL="konstantin.mailinglists@googlemail.com"
 # Setting up git.
 if [ ! -f ~/.gitconfig ]; then
+  git config --global alias.p push
   git config --global alias.b branch
   git config --global alias.c clone
   git config --global alias.ci commit
@@ -73,8 +76,8 @@ if [ ! -f ~/.gitconfig ]; then
   git config --global alias.st status
   git config --global alias.chp cherry-pick
   git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
-  git config --global user.name "Konstantin Haase"
-  git config --global user.email "konstantin.mailinglists@googlemail.com"
+  git config --global user.name "$USER_NAME"
+  git config --global user.email "$USER_EMAIL"
   git config --global color.branch auto
   git config --global color.diff auto
   git config --global color.grep auto
@@ -85,6 +88,13 @@ if [ ! -f ~/.gitconfig ]; then
   git config --global push.default matching
   git config --global github.user "rkh"
   echo "please add your github token to ~/.gitconf"
+else
+  if [ "$(git config --global user.name)" != "$USER_NAME" ]; then
+    echo "WARNING: git's user.name is $(git config --global user.name)"
+  fi
+  if [ "$(git config --global user.email)" != "$USER_EMAIL" ]; then
+    echo "WARNING: git's user.email is $(git config --global user.email)"
+  fi
 fi
 
  . $DOTFILES/.git_completion
@@ -228,7 +238,7 @@ alias ciam='git ci -am'
 alias sl='ls'
 alias gti='git'
 alias lg='log'
-for cmd in st ci add b c chp lg clone clean; do alias git$cmd='git $cmd'; done
+for cmd in st ci add b c chp lg clone clean push; do alias git$cmd='git $cmd'; done
 
 #if which hub > /dev/null; then
 #  alias git=hub
