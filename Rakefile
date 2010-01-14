@@ -12,9 +12,7 @@ namespace :install do
       Dir.glob files do |file|
         source = File.expand_path file
         target = File.join ENV["HOME"], file
-        print "  \033[0;32m>>\033[0m "
         FileUtils::Verbose.mkdir_p File.dirname(target)
-        print "  \033[0;32m>>\033[0m "
         FileUtils::Verbose.ln_sf source, target
       end
     end
@@ -23,6 +21,6 @@ namespace :install do
 
   install :irb, "{.irbrc,.config/irb/*.rb}"
   install :vim, ".vim*"
-  install :bash, "{.bash*,.git_completion,.rvmrc}"
+  install :bash, "{.bash*,.git_completion,.rvmrc,.global_gitignore}"
 
 end

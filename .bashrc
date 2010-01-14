@@ -87,6 +87,7 @@ if [ ! -f ~/.gitconfig ]; then
   git config --global help.autocorrect 1
   git config --global push.default matching
   git config --global github.user "rkh"
+  git config --global core.excludesfile ~/.global_gitignore
   echo "please add your github token to ~/.gitconf"
 else
   if [ "$(git config --global user.name)" != "$USER_NAME" ]; then
