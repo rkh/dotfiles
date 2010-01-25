@@ -48,7 +48,10 @@ export SYDNEY=1
 export MAGLEV_HOME=$HOME/Repositories/maglev
 export PATH=$MAGLEV_HOME/bin:$PATH
 
-if [[ -s /opt/rvm/scripts/rvm ]] ; then source /opt/rvm/scripts/rvm ; fi
+if [[ -s /opt/rvm/scripts/rvm ]] ; then
+  source /opt/rvm/scripts/rvm ;
+  rvm use ree # evil temp fix
+fi
 
 # Fix Ruby version
 if [ !`which install_ruby 2>/dev/null` ] && [ `which ruby 2>/dev/null` ]; then
