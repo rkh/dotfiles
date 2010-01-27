@@ -70,7 +70,9 @@ USER_NAME="Konstantin Haase"
 USER_EMAIL="konstantin.mailinglists@googlemail.com"
 # Setting up git.
 if [ ! -f ~/.gitconfig ]; then
-  git config --global alias.p push
+  git config --global alias.ps push
+  git config --global alias.pl "pull --no-ff"
+  git config --global alias.mr "merge --no-ff"
   git config --global alias.b branch
   git config --global alias.c clone
   git config --global alias.ci commit
