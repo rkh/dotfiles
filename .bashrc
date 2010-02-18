@@ -80,6 +80,7 @@ if [ ! -f ~/.gitconfig ]; then
   git config --global alias.st status
   git config --global alias.chp cherry-pick
   git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset %Cblue%aN%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
+  git config --global alias.sl "shortlog -sn"
   git config --global user.name "$USER_NAME"
   git config --global user.email "$USER_EMAIL"
   git config --global color.branch auto
