@@ -21,7 +21,7 @@ function delink()
 # General Settings
 export DOTFILES=$(dirname `delink ~/.bashrc` )
 export PATH="$HOME/bin:$HOME/.bin:$HOME/.local/bin:$HOME/gtk/inst/bin:/usr/local/bin:/Developer/usr/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
-export PWD_LENGTH=30
+export PWD_LENGTH=50
 set -o ignoreeof
 set -o notify
 shopt -s cdspell >/dev/null 2>&1
