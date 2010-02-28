@@ -28,6 +28,7 @@ nbproject
 .glimpse*
 .hg
 .hgignore
+.yardoc
 COMMIT
 TAGS
 .svn
