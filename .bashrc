@@ -109,6 +109,7 @@ fi
 case `uname` in
   Darwin)
     export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
+    export GROOVY_HOME="/opt/local/share/java/groovy/"
     if [ $(which mate) ]; then
       export EDITOR="mate"
       export SVN_EDITOR="mate -wl1"
