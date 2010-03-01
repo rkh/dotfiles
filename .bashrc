@@ -244,7 +244,6 @@ alias ciam='git ci -am'
 alias sl='ls'
 alias gti='git'
 alias lg='log'
-for cmd in st ci add b c chp lg clone clean push; do alias git$cmd='git $cmd'; done
 
 #if which hub > /dev/null; then
 #  alias git=hub
