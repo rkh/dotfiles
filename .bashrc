@@ -1,6 +1,3 @@
-# If not running interactively, don't do anything.
-[ -z "$PS1" ] && return
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then . /etc/bashrc; fi
 
@@ -69,32 +66,7 @@ fi
 USER_NAME="Konstantin Haase"
 USER_EMAIL="konstantin.mailinglists@googlemail.com"
 # Setting up git.
-if [ ! -f ~/.gitconfig ]; then
-  git config --global alias.ps push
-  git config --global alias.pl "pull --no-ff"
-  git config --global alias.mr "merge --no-ff"
-  git config --global alias.b branch
-  git config --global alias.c clone
-  git config --global alias.ci commit
-  git config --global alias.co checkout
-  git config --global alias.st status
-  git config --global alias.chp cherry-pick
-  git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset %Cblue%aN%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
-  git config --global alias.sl "shortlog -sn"
-  git config --global alias.msg "commit --allow-empty -m"
-  git config --global user.name "$USER_NAME"
-  git config --global user.email "$USER_EMAIL"
-  git config --global color.branch auto
-  git config --global color.diff auto
-  git config --global color.grep auto
-  git config --global color.interactive auto
-  git config --global color.ui auto
-  git config --global help.autocorrect 1
-  git config --global push.default matching
-  git config --global github.user "rkh"
-  git config --global core.excludesfile ~/.global_gitignore
-  echo "please add your github token to ~/.gitconf"
-else
+if [ -f ~/.gitconfig ]; then
   if [ "$(git config --global user.name)" != "$USER_NAME" ]; then
     echo "WARNING: git's user.name is $(git config --global user.name)"
   fi
