@@ -93,7 +93,7 @@ case `uname` in
     done
     unset p
     gitx() { open -a GitX $@; }
-	PATH=$PATH:/usr/local/mysql/bin
+    pdfman() { man -t $1 | open -a /Applications/Preview.app -f; }
     ;;
   Linux)
     PATH=$PATH:/var/lib/gems/1.8/bin:/var/lib/gems/1.9/bin
