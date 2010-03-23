@@ -241,6 +241,9 @@ function et() {
   $cmd
 }
 
+# handy for opening files from ruby stdlib
+function ret() { $EDITOR $(gem which $@); }
+
 # shorthands - i do this a lot
 ruby_version() { if [ -z $1 ]; then echo $RUBY_VERSION; else RUBY_VERSION=$1; fi; }
 
