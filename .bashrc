@@ -156,12 +156,10 @@ ps1_vcs='\[\033[01;33m\]$(__git_ps1 " (git: %s)")\[\033[00m\]'
 
 # Ruby version in prompt if Rakefile exists.
 show_ruby_version() {
-  if [ -f "Rakefile" ] && [ `which ruby 2>/dev/null` ]; then
-    echo -n "$RUBY_VERSION "
-  fi
+  rvm-prompt u
 }
 
-ps1_ruby='\[\033[01;30m\]$(show_ruby_version)\[\033[00m\]'
+ps1_ruby='\[\033[01;30m\]$(show_ruby_version) \[\033[00m\]'
 
 # Short PWD, if it's to long.
 short_pwd() {
