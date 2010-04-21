@@ -17,7 +17,7 @@ function delink()
 
 # General Settings
 export DOTFILES=$(dirname `delink ~/.bashrc` )
-export PATH="$HOME/bin:$HOME/.bin:$HOME/.local/bin:$HOME/gtk/inst/bin:/usr/local/bin:/Developer/usr/bin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
+export PATH="$HOME/bin:$HOME/.bin:$HOME/.local/bin:$HOME/gtk/inst/bin:/usr/local/sbin:/usr/local/bin:/Developer/usr/bin:/usr/sbin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
 export PWD_LENGTH=50
 set -o ignoreeof
 set -o notify
@@ -37,7 +37,7 @@ shopt -s histappend >/dev/null 2>&1
 
 # Ruby Settings
 export RUBY_VERSION=1.9.1
-export RUBYOPT=rubygems
+export RUBYOPT=-rubygems
 export RUBY_PATH=/opt/ruby
 export PATH=$RUBY_PATH/bin:$PATH
 export SYDNEY=1
