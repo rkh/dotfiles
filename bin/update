@@ -5,6 +5,8 @@ EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
 REDMINE=$HOME/redmine
 WORKSPACE=$HOME/Workspace
 
+CD=$(which cd)
+
 function announce() {
   echo -e "\033[0;32m$(date +%H:%m) \033[1;32m$@\033[m" >&2
 }
@@ -12,16 +14,15 @@ function announce() {
 function update_repository() {
   cd $REPOSITORIES
   if [ -d $1 ]; then
-    announce "Updating $d"
+    announce "Updating $1"
     cd $1
     if [ -d .git ]; then git pull
     else if [ -d .svn ]; then svn up
     else if [ -d .hg ]; then hg pull
     else echo "no vcs" >&2; fi; fi
     fi
-    cd -
+    cd ..
   fi
-  cd -
 }
 
 function cleanup_repositories() {
@@ -34,7 +35,6 @@ function cleanup_repositories() {
 function update_repositories() {
   cd $REPOSITORIES
   for d in *; do update_repository $d; done
-  cd -
 }
 
 function update_homebrew() {
@@ -107,7 +107,6 @@ function update_redmine() {
   cd $REDMINE
   git co master && git pull edavis10 master && git push origin master
   git co 0.9-stable && git pull edavis10 0.9-stable && git push origin 0.9-stable
-  cd -
 }
 
 function update_redmine_dev_tools() {
@@ -115,7 +114,6 @@ function update_redmine_dev_tools() {
   cd $WORKSPACE/redmine-dev-tools
   git svn rebase
   git push
-  cd -
 }
 
 function update_finnlabs() {
@@ -130,8 +128,22 @@ function update() {
   #cleanup_repositories
 }
 
+function display_help() {
+echo "Examples:
+  update                    # updates everything
+  update repositories       # updates all repositories
+  update repository rails   # updates rails clone
+  update brew               # updates homebrew and all outdated formulas
+  update formulas           # updates all outdated formulas
+  update formula mysql      # updates mysql formula + config
+  update rubies             # updates all rubies + gems"
+}
+
 if [ $1 ]; then
-  update_$@
+  case $1 in
+    help|usage|--help|-h|-?) display_help;;
+    *) update_$@;;
+  esac
 else
   update
 fi
