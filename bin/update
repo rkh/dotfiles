@@ -5,8 +5,6 @@ EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
 REDMINE=$HOME/redmine
 WORKSPACE=$HOME/Workspace
 
-CD=$(which cd)
-
 function announce() {
   echo -e "\033[0;32m$(date +%H:%m) \033[1;32m$@\033[m" >&2
 }
@@ -38,7 +36,7 @@ function update_repositories() {
 }
 
 function update_homebrew() {
-  announce "updating homebrew"
+  announce "Updating homebrew"
   brew update
 }
 
@@ -54,7 +52,7 @@ function update_formulas() {
 }
 
 function update_formula() {
-  announce "updating $1"
+  announce "Updating $1"
   brew install $1
   case $1 in
     mysql)      update_brew_launchd $1 com.mysql.mysqld.plist;;
@@ -76,23 +74,31 @@ function update_stable_ruby() {
 }
 
 function update_edge_ruby() {
-  announce "updating $1"
+  announce "Updating $1"
   [ $1 = rbx-head ] && rvm uninstall $1
   rvm install $1 -C --with-iconv-dir=$rvm_path/usr
 }
 
 function update_gems() {
-  announce "updating rubygems"
-  rvm gem update --system
-  rvm gem update --no-verbose --development
-  rvm gem update --prerelease --no-verbose --development
+  announce "Updating gems for $1"
+  rvm use $1 > /dev/null
+  gem update --system
+  gem update --no-verbose --development
+  gem update --prerelease --no-verbose --development
+  rvm use default > /dev/null
+}
+
+function update_all_gems() {
+  for ruby in $STABLE_RUBIES $EDGE_RUBIES; do
+    [ $ruby != ironruby ] && update_gems $ruby
+  done
 }
 
 function update_rubies() {
   update_rvm
   for ruby in $STABLE_RUBIES; do update_stable_ruby $ruby; done
   for ruby in $EDGE_RUBIES;   do update_edge_ruby   $ruby; done
-  update_gems
+  update_all_gems
 }
 
 function update_brew_launchd() {
@@ -111,7 +117,7 @@ function update_redmine() {
 }
 
 function update_redmine_dev_tools() {
-  announce "Updateing redmine-dev-tools"
+  announce "Updating redmine-dev-tools"
   cd $WORKSPACE/redmine-dev-tools
   git svn rebase
   git push
