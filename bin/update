@@ -1,8 +1,9 @@
-export REPOSITORIES=$HOME/Repositories
-export STABLE_RUBIES="1.8.6 1.8.7 1.9.1 1.9.2 ree rbx jruby maglev ironruby macruby"
-export EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
-export REDMINE=$HOME/redmine
-export WORKSPACE=$HOME/Workspace
+#!/usr/bin/env bash
+REPOSITORIES=$HOME/Repositories
+STABLE_RUBIES="1.8.6 1.8.7 1.9.1 1.9.2 ree rbx jruby maglev ironruby macruby"
+EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
+REDMINE=$HOME/redmine
+WORKSPACE=$HOME/Workspace
 
 function announce() {
   echo -e "\033[0;32m$(date +%H:%m) \033[1;32m$@\033[m" >&2
@@ -128,3 +129,10 @@ function update() {
   update_rubies
   #cleanup_repositories
 }
+
+if [ $1 ]; then
+  update_$1
+else
+  update
+fi
+

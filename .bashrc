@@ -17,7 +17,8 @@ function delink()
 
 # General Settings
 export DOTFILES=$(dirname `delink ~/.bashrc` )
-export PATH="$HOME/bin:$HOME/.bin:$HOME/.local/bin:$HOME/gtk/inst/bin:/usr/local/sbin:/usr/local/bin:/Developer/usr/bin:/usr/sbin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
+export PATH="/usr/local/sbin:/usr/local/bin:/Developer/usr/bin:/usr/sbin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
+export PATH="$HOME/bin:$HOME/.bin:$HOME/.local/bin:$HOME/gtk/inst/bin:$DOTFILES/bin:$PATH"
 export PWD_LENGTH=50
 set -o ignoreeof
 set -o notify
@@ -72,7 +73,6 @@ if [ -f ~/.gitconfig ]; then
 fi
 
 . $DOTFILES/.git_completion
-. $DOTFILES/update.sh
 
 # OS specific config.
 case `uname` in
