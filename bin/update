@@ -72,11 +72,12 @@ function update_rvm() {
 
 function update_stable_ruby() {
   rvm use $1 > /dev/null || update_edge_ruby $1
-  rvm use default
+  rvm use default > /dev/null
 }
 
 function update_edge_ruby() {
   announce "updating $1"
+  [ $1 = rbx-head ] && rvm uninstall $1
   rvm install $1 -C --with-iconv-dir=$rvm_path/usr
 }
 
