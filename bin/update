@@ -89,8 +89,8 @@ function update_gems() {
 
 function update_rubies() {
   update_rvm
-  for ruby in STABLE_RUBIES; do update_stable_ruby $ruby; done
-  for ruby in EDGE_RUBIES;   do update_edge_ruby   $ruby; done
+  for ruby in $STABLE_RUBIES; do update_stable_ruby $ruby; done
+  for ruby in $EDGE_RUBIES;   do update_edge_ruby   $ruby; done
   update_gems
 }
 
