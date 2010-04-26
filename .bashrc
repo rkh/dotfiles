@@ -71,7 +71,8 @@ if [ -f ~/.gitconfig ]; then
   fi
 fi
 
- . $DOTFILES/.git_completion
+. $DOTFILES/.git_completion
+. $DOTFILES/update.sh
 
 # OS specific config.
 case `uname` in
