@@ -131,7 +131,7 @@ function update() {
 }
 
 if [ $1 ]; then
-  update_$1
+  update_$@
 else
   update
 fi
