@@ -137,13 +137,13 @@ function update() {
 
 function display_help() {
 echo "Examples:
-  update                    # updates everything
-  update repositories       # updates all repositories
-  update repository rails   # updates rails clone
-  update brew               # updates homebrew and all outdated formulas
-  update formulas           # updates all outdated formulas
-  update formula mysql      # updates mysql formula + config
-  update rubies             # updates all rubies + gems"
+        update                      #   updates everything
+        update repositories         #   updates all repositories
+        update repository rails     #   updates rails clone
+        update brew                 #   updates homebrew and all outdated formulas
+        update formulas             #   updates all outdated formulas
+        update formula mysql        #   updates mysql formula + config
+        update rubies               #   updates all rubies + gems"
 }
 
 if [ $1 ]; then
@@ -154,4 +154,3 @@ if [ $1 ]; then
 else
   update
 fi
-
