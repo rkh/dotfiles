@@ -5,6 +5,13 @@ EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
 REDMINE=$HOME/redmine
 WORKSPACE=$HOME/Workspace
 
+export ARCHFLAGS="-arch x86_64"
+
+function verb() {
+  echo $@ >&2
+  $@
+}
+
 function announce() {
   echo -e "\033[0;32m$(date +%H:%m) \033[1;32m$@\033[m" >&2
 }
@@ -76,7 +83,7 @@ function update_stable_ruby() {
 function update_edge_ruby() {
   announce "Updating $1"
   [ $1 = rbx-head ] && rvm uninstall $1
-  rvm install $1 -C --with-iconv-dir=$rvm_path/usr
+  rvm install $1 -C --with-iconv-dir=$rvm_path/usr --cc=clang --enable-pthreads
 }
 
 function update_gems() {
@@ -102,11 +109,12 @@ function update_rubies() {
 }
 
 function update_brew_launchd() {
-  launchctl unload -w ~/Library/LaunchAgents/$2
+  target=$HOME/Library/LaunchAgents/$2
+  verb launchctl unload -w $target
   for plist in /usr/local/Cellar/$1/*/$2; do
-    cp $plist ~/Library/LaunchAgents/$2
+    cp -v $plist $target
   done
-  launchctl load -w ~/Library/LaunchAgents/$2
+  verb launchctl load -w $target
 }
 
 function update_redmine() {
@@ -129,15 +137,56 @@ function update_finnlabs() {
 }
 
 function update() {
+  update_setup
   update_repositories
   update_brew
   update_rubies
   #cleanup_repositories
 }
 
+function update_all() {
+  update
+  update_finnlabs
+  cleanup_repositories
+}
+
+function setup_brew() {
+  if [ ! $(which brew) ]; then
+    announce "Installing homebrew"
+    sudo mkdir /usr/local
+    sudo chown -R `whoami` /usr/local
+    curl -L http://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C /usr/local
+    update_formula install git
+    update_formula install pkg-config
+    update_formula install readline
+  fi
+}
+
+function setup_rvm() {
+  if [ ! $(which rvm) ]; then
+    announce "Installing rvm"
+    mkdir -p ~/.rvm/src/ && cd ~/.rvm/src && rm -rf ./rvm/ && git clone --depth 1 git://github.com/wayneeseguin/rvm.git && cd rvm && ./install
+    echo 'if [[ -s $rvm_path/scripts/rvm ]] ; then source $rvm_path/scripts/rvm ; fi' >> ~/.bashrc
+    source ~/.rvm/scripts/rvm
+    rvm package install iconv
+  fi
+}
+
+function setup_structure() {
+  [ $(which libtoolize) ] || ln -s /Developer/usr/bin/glibtoolize /Developer/usr/bin/libtoolize
+  mkdir -p $REPOSITORIES $WORKSPACE
+}
+
+function update_setup() {
+  setup_structure
+  setup_brew
+  setup_rvm
+}
+
 function display_help() {
 echo "Examples:
         update                      #   updates everything
+        update setup                #   installes homebrew, rvm, git and such if missing
         update repositories         #   updates all repositories
         update repository rails     #   updates rails clone
         update brew                 #   updates homebrew and all outdated formulas
