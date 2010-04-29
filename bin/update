@@ -124,6 +124,7 @@ function update_redmine() {
   cd $REDMINE
   git co master && git pull edavis10 master && git push origin master
   git co 0.9-stable && git pull edavis10 0.9-stable && git push origin 0.9-stable
+  git co master && git fetch edavis10 --tags && git push --tags
 }
 
 function update_redmine_dev_tools() {
