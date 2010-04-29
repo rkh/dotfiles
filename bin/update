@@ -92,6 +92,8 @@ function update_gems() {
   gem update --system
   gem update --no-verbose --development
   gem update --prerelease --no-verbose --development
+  gem uninstall ruby-debug-base -a
+  gem install ruby-debug
   rvm use default > /dev/null
 }
 
