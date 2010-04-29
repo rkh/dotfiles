@@ -83,7 +83,7 @@ function update_stable_ruby() {
 function update_edge_ruby() {
   announce "Updating $1"
   [ $1 = rbx-head ] && rvm uninstall $1
-  rvm install $1 -C --with-iconv-dir=$rvm_path/usr --cc=clang --enable-pthreads
+  rvm install $1 -C --with-iconv-dir=$rvm_path/usr -C --cc=clang -C --enable-pthreads
 }
 
 function update_gems() {
