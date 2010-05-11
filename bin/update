@@ -5,6 +5,8 @@ EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
 REDMINE=$HOME/redmine
 WORKSPACE=$HOME/Workspace
 
+. $HOME/.rvm/scripts/rvm
+
 export ARCHFLAGS="-arch x86_64"
 
 function verb() {
