@@ -40,3 +40,4 @@ build
 dist
 setuptools-*
 .sass-cache
+.DS_Store
