@@ -84,16 +84,20 @@ function update_stable_ruby() {
 
 function update_edge_ruby() {
   announce "Updating $1"
-  [ $1 = rbx-head ] && rvm uninstall $1
-  rvm install $1 -C --with-iconv-dir=$rvm_path/usr -C --cc=clang -C --enable-pthreads
+  options=''
+  case $1 in
+    rbx-head) rvm uninstall $1;;
+    ree|1.*) options="-C --with-iconv-dir=$rvm_path/usr -C --cc=clang -C --enable-pthreads";;
+  esac
+  rvm install $1 $options
 }
 
 function update_gems() {
   announce "Updating gems for $1"
   rvm use $1 > /dev/null
   gem update --system
-  gem update --no-verbose --development
-  gem update --prerelease --no-verbose --development
+  gem update --no-verbose
+  gem update --prerelease --no-verbose
   yes | gem uninstall -a ruby-debug-base
   gem install ruby-debug
   rvm use default > /dev/null
