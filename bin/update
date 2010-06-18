@@ -4,6 +4,7 @@ STABLE_RUBIES="1.8.6 1.8.7 1.9.1 1.9.2 ree rbx jruby maglev ironruby macruby"
 EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
 REDMINE=$HOME/redmine
 WORKSPACE=$HOME/Workspace
+FORKS="rails sinatra rack em-redis ebb"
 
 . $HOME/.rvm/scripts/rvm
 
@@ -26,7 +27,8 @@ function update_repository() {
     if [ -d .git ]; then git pull
     else if [ -d .svn ]; then svn up
     else if [ -d .hg ]; then hg pull
-    else echo "no vcs" >&2; fi; fi
+    else if [ -d _FOSSIL_ ]; then fossil update
+    else echo "no vcs" >&2; fi; fi; fi
     fi
     cd ..
   fi
@@ -153,8 +155,23 @@ function update() {
   #cleanup_repositories
 }
 
+function update_fork() {
+  announce "Updating github fork of $1"
+  cd $WORKSPACE/$1
+  git remote add $1 git://github.com/$1/$1.git 1>&2 2>/dev/null
+  git co master && git pull origin master && git pull $1 master && git push origin master
+  cd -
+}
+
+function update_forks() {
+  for fork in $FORKS; do
+    update_fork $fork
+  done
+}
+
 function update_all() {
   update
+  update_forks
   update_finnlabs
   cleanup_repositories
 }
@@ -193,7 +210,7 @@ function update_setup() {
 }
 
 function display_help() {
-echo "Examples:
+  echo "Examples:
         update                      #   updates everything
         update setup                #   installes homebrew, rvm, git and such if missing
         update repositories         #   updates all repositories
