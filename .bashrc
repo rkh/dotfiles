@@ -214,9 +214,10 @@ alias sl='ls'
 alias gti='git'
 alias lg='log'
 
-#if which hub > /dev/null; then
-#  alias git=hub
-#fi
+if which hub > /dev/null; then
+  alias nohub=$(which git)
+  alias git=hub
+fi
 
 #alias et='$EDITOR $(ls -A)'
 function et() {
