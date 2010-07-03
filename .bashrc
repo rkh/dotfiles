@@ -214,6 +214,10 @@ alias sl='ls'
 alias gti='git'
 alias lg='log'
 
+# ruby
+alias be='bundle exec'
+alias br='bundle exec rake'
+
 #if which hub > /dev/null; then
 #  alias nohub=$(which git)
 #  alias git=hub
