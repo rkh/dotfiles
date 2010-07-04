@@ -34,10 +34,39 @@ function update_repository() {
   fi
 }
 
-function cleanup_repositories() {
-  for d in $REPOSITORIES/*/; do
+function update_cleanup() {
+  update_cleanup_rvm
+  update_cleanup_repositories
+}
+
+function update_cleanup_repositories() {
+  for d in $REPOSITORIES/*/.git; do
     announce "Cleaning up $d"
-    GIT_DIR="$d.git" git gc --aggressive
+    GIT_DIR=$d git gc --aggressive
+  done
+}
+
+function update_cleanup_rvm() {
+  announce "removing rvm sources"
+  rm -Rf $rvm_path/src
+  unset l186 l187 l191 l192 lmgl ljrb lirb lmrb lrbx lree to_remove
+  for ruby in $(rvm list strings); do
+    case $ruby in
+      ruby-1.8.6-p*)  to_remove="$l186 $to_remove" l186=$ruby;;
+      ruby-1.8.7-p*)  to_remove="$l187 $to_remove" l187=$ruby;;
+      ruby-1.9.1-p*)  to_remove="$l191 $to_remove" l191=$ruby;;
+      ruby-1.9.2-p*)  to_remove="$l192 $to_remove" l192=$ruby;;
+      maglev-*)       to_remove="$lmgl $to_remove" lmgl=$ruby;;
+      jruby-1*)       to_remove="$ljrb $to_remove" ljrb=$ruby;;
+      ironruby-1*)    to_remove="$lirb $to_remove" lirb=$ruby;;
+      macruby-0*)     to_remove="$lmrb $to_remove" lmrb=$ruby;;
+      rbx-1*)         to_remove="$lrbx $to_remove" lrbx=$ruby;;
+      ree-*)          to_remove="$lree $to_remove" lree=$ruby;;
+    esac
+  done
+  for ruby in $to_remove; do
+    announce "removing $ruby"
+    rvm remove $ruby
   done
 }
 
