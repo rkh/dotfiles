@@ -32,6 +32,8 @@ shopt -u mailwarn >/dev/null 2>&1
 shopt -s no_empty_cmd_completion >/dev/null 2>&1
 bind Space:magic-space
 
+export PYTHONPATH="/usr/local/lib/python2.6/site-packages/:$PYTHONPATH"
+
 # Bash History
 export HISTIGNORE="&:ls:ll:la:l.:pwd:exit:clear"
 export HISTCONTROL=ignoreboth
