@@ -17,7 +17,7 @@ function delink()
 
 # General Settings
 export DOTFILES=$(dirname `delink ~/.bashrc` )
-export PATH="/usr/local/sbin:/usr/local/bin:/Developer/usr/bin:/usr/sbin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/local/share/npm/bin:/Developer/usr/bin:/usr/sbin:/usr/bin:/usr/ucb:$PATH:/opt/bin:/opt/local/bin:."
 export PATH="$HOME/bin:$HOME/.bin:$HOME/.local/bin:$HOME/gtk/inst/bin:$DOTFILES/bin:$PATH"
 export PWD_LENGTH=50
 set -o ignoreeof
