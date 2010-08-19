@@ -216,6 +216,12 @@ alias sl='ls'
 alias gti='git'
 alias lg='log'
 
+# yuicompressor
+alias yuicompressor="java -jar $HOME/yuicompressor-*.jar"
+
+# git
+alias sci='git svn rebase && git svn dcommit'
+
 # ruby
 alias be='bundle exec'
 alias br='bundle exec rake'

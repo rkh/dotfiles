@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 REPOSITORIES=$HOME/Repositories
 STABLE_RUBIES="1.8.6 1.8.7 1.9.1 1.9.2 ree rbx jruby maglev ironruby macruby"
-EDGE_RUBIES="rbx-head ruby-head ruby-1.8-head jruby-head"
+EDGE_RUBIES="rbx-head ruby-1.8-head jruby-head ruby-head"
 REDMINE=$HOME/redmine
 WORKSPACE=$HOME/Workspace
 FORKS="rails sinatra rack em-redis ebb"
@@ -159,8 +159,9 @@ function update_brew_launchd() {
 function update_redmine() {
   announce "Merging redmine commits into finnlabs fork"
   cd $REDMINE
-  git co master && git pull edavis10 master && git push origin master
-  git co 0.9-stable && git pull edavis10 0.9-stable && git push origin 0.9-stable
+  for branch in master 0.9-stable 1.0-stable; do
+    git co $branch && git pull edavis10 $branch && git push origin $branch
+  done
   git co master && git fetch edavis10 --tags && git push --tags
 }
 
