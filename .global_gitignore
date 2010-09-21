@@ -42,3 +42,4 @@ setuptools-*
 .sass-cache
 .DS_Store
 .rvmrc
+.redcar
