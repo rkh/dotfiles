@@ -91,7 +91,6 @@ case `uname` in
       export PATH=$p:$PATH
     done
     unset p
-    gitx() { open -a GitX $@; }
     pdfman() { man -t $1 | open -a /Applications/Preview.app -f; }
     ;;
   Linux)
