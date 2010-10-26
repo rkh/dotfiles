@@ -76,15 +76,19 @@ fi
 
 . $DOTFILES/.git_completion
 
+
+if [ $(which ree_redcar) ]; then
+  alias redcar=ree_redcar
+  alias mate=redcar
+  export EDITOR="redcar"
+  export SVN_EDITOR="redcar -w"
+fi
+
 # OS specific config.
 case `uname` in
   Darwin)
     export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
     export GROOVY_HOME="/opt/local/share/java/groovy/"
-    if [ $(which mate) ]; then
-      export EDITOR="mate"
-      export SVN_EDITOR="mate -wl1"
-    fi
     function fullscreen() { printf "\e[3;0;0;t\e[8;0;0t"; return 0; }
     alias ls='ls -G'
     for p in /usr/local/*/bin /usr/*/bin; do
