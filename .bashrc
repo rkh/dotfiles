@@ -78,7 +78,7 @@ fi
 
 
 if [ $(which ree_redcar) ]; then
-  alias redcar=ree_redcar
+  alias redcar="ree_redcar --fork --quick"
   alias mate=redcar
   export EDITOR="redcar"
   export SVN_EDITOR="redcar -w"
