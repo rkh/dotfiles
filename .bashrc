@@ -96,6 +96,7 @@ case `uname` in
     done
     unset p
     pdfman() { man -t $1 | open -a /Applications/Preview.app -f; }
+    alias textmate=/usr/bin/mate
     ;;
   Linux)
     PATH=$PATH:/var/lib/gems/1.8/bin:/var/lib/gems/1.9/bin
