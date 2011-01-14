@@ -230,6 +230,8 @@ alias sci='git svn rebase && git svn dcommit'
 alias be='bundle exec'
 alias br='bundle exec rake'
 alias bs='bundle exec rspec spec'
+alias r='rails'
+alias rt='rails s thin'
 
 #if which hub > /dev/null; then
 #  alias nohub=$(which git)
