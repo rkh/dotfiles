@@ -77,8 +77,8 @@ fi
 . $DOTFILES/.git_completion
 
 
-if [ $(which ree_redcar) ]; then
-  alias redcar="ree_redcar --fork --quick"
+if [ $(which redcar) ]; then
+  alias redcar="redcar --fork --quick"
   alias mate=redcar
   export EDITOR="redcar"
   export SVN_EDITOR="redcar -w"
