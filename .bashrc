@@ -43,10 +43,6 @@ shopt -s histappend >/dev/null 2>&1
 export RUBY_VERSION=1.9.1
 export RUBYOPT=-rubygems
 
-if [[ -s /opt/rvm/scripts/rvm ]] ; then
-  source /opt/rvm/scripts/rvm ;
-  rvm use ree # evil temp fix
-fi
 
 # Fix Ruby version
 if [ !`which install_ruby 2>/dev/null` ] && [ `which ruby 2>/dev/null` ]; then
@@ -335,3 +331,4 @@ set show-all-if-ambiguous on
 
 # Clean up.
 unset ps1_user ps1_host ps1_vcs ps_ruby ps1_pwd ps1_ruby script this dir bin
+if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
