@@ -1,16 +1,11 @@
-#!/usr/bin/env bash -e
-export STABLE_RUBIES="1.8.6 1.8.7 1.9.1 1.9.2 ree rbx jruby maglev ironruby macruby"
-export EDGE_RUBIES="rbx-head ruby-1.8-head jruby-head ruby-head ruby-1.9.2-head"
+#!/usr/bin/env bash
+export STABLE_RUBIES="1.8.6 1.8.7 1.9.1 1.9.2 ree rbx jruby maglev macruby"
+export EDGE_RUBIES="rbx-head ruby-1.8-head jruby-head ruby-head ruby-1.9.2-head hydra"
 export RUBIES="$STABLE_RUBIES $EDGE_RUBIES"
-export IMPORTANT_GEMS="bundler backports rspec fuubar minitest gem-open"
 
 function cmd() {
   echo -e "\n\033[0;33m>>>>>>>>>>>> $(date +%H:%m) \033[1;33m$@\033[m" >&2
   ($@ && echo -e "\n\033[0;32mSUCCESS\033[m") || echo -e "\n\033[0;31mFAIL\033[m"
-}
-
-function install_missing_gem() {
-  (gem list $@ | grep -q $@ && echo "not missing") || cmd gem install $@
 }
 
 function update_redcar() {
@@ -23,32 +18,52 @@ function update_redcar() {
 function update_gems() {
   for ruby in $RUBIES; do
     cmd rvm use $ruby
-    #cmd gem update --system
+    cmd gem update --system
     cmd gem update
-    for gem in $IMPORTANT_GEMS; do
-      cmd install_missing_gem $gem
-    done
   done
 }
 
 cmd . $HOME/.rvm/scripts/rvm
 cmd export ARCHFLAGS="-arch x86_64"
 
+function install_ruby() {
+  case $@ in
+    1.9*|ruby-1.9*|ruby-head)
+      rvm use 1.9.2p180 >/dev/null 2>&1
+      cmd rvm install $@ --without-tk
+      ;;
+    hydra)
+      cmd rvm install rbx-head-nhydra --branch hydra
+      ;;
+    *)
+      cmd rvm install $@
+      ;;
+  esac
+}
+
 function update_rubies() {
   cmd rvm get head
   cmd rvm reload
   for ruby in $STABLE_RUBIES; do
-    cmd rvm use $ruby --install
+    (rvm use $ruby >/dev/null 2>&1) || install_ruby $ruby
   done
   for ruby in $EDGE_RUBIES; do
-    rvm use 1.9.2
-    cmd rvm install $ruby
-  done  
+    install_ruby $ruby
+  done
   update_gems
+}
+
+function update_brew() {
+  brew update
+  for app in `brew outdated`; do
+    brew install $app
+  done
 }
 
 function update() {
   update_rubies
+  update_redcar
+  update_brew
 }
 
 if [ $1 ]; then

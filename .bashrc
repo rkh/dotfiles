@@ -38,16 +38,17 @@ export PYTHONPATH="/usr/local/lib/python2.6/site-packages/:$PYTHONPATH"
 export HISTIGNORE="&:ls:ll:la:l.:pwd:exit:clear"
 export HISTCONTROL=ignoreboth
 shopt -s histappend >/dev/null 2>&1
+shopt -s histverify
 
 # Ruby Settings
-export RUBY_VERSION=1.9.1
+source "$HOME/.rvm/scripts/rvm"
+rvm use default
 export RUBYOPT=-rubygems
 
-
-# Fix Ruby version
-if [ !`which install_ruby 2>/dev/null` ] && [ `which ruby 2>/dev/null` ]; then
-  export RUBY_VERSION=$(ruby --version | sed -e "s/^ruby \(.\..\..\).*$/\1/")
-fi
+for dir in ~/ruby_tools/*; do
+  export RUBYLIB="$dir/lib:$RUBYLIB"
+  export PATH="$dir/bin:$PATH"
+done
 
 # Disable XON/XOFF flow control (^s/^q).
 stty -ixon
@@ -331,4 +332,3 @@ set show-all-if-ambiguous on
 
 # Clean up.
 unset ps1_user ps1_host ps1_vcs ps_ruby ps1_pwd ps1_ruby script this dir bin
-if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
