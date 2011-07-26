@@ -1,0 +1,1 @@
+$().ready(function() { $('.octofication').remove(); });
